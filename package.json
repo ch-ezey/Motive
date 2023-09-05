@@ -3,11 +3,15 @@
   "version": "0.0.1",
   "private": true,
   "main": "index.js",
+  "homepage": "https://naechebango.github.io/Motive",
+
   "scripts": {
     "android": "react-native run-android",
     "ios": "react-native run-ios",
     "lint": "eslint .",
     "start": "react-native start",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
     "test": "jest"
   },
   "dependencies": {
@@ -60,6 +64,7 @@
     "@types/react-test-renderer": "^18.0.0",
     "babel-jest": "^29.2.1",
     "eslint": "^8.19.0",
+    "gh-pages": "^6.0.0",
     "jest": "^29.2.1",
     "metro-react-native-babel-preset": "0.76.7",
     "prettier": "^2.4.1",
