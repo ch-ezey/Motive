@@ -38,10 +38,7 @@ If you're interested in contributing to this exciting project or exploring oppor
 - **Firebase:** As the backend and database solution.
 - **Android Studio:** For emulation and testing.
 
-## License
-This project is open-source and available under the [MIT License](LICENSE.md). Feel free to explore, fork, or use it as a reference for your own projects.
-
 ## Contact
-For inquiries, collaborations, or questions, you can reach me at [Your Email Address].
+For inquiries, collaborations, or questions, you can reach me at [cezey01@gmail.com].
 
 Thank you for visiting this repository and sharing in the excitement of "Motive." Together, we're making student life more fun and memorable!
