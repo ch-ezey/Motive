@@ -91,6 +91,7 @@ const FormikPostUploader = ({image, navigation}) => {
     const onUpload = async (caption) => {
       try {
           const postInput = {
+            fileName: (selectedImage.uri).substring(selectedImage.uri.lastIndexOf('/') + 1),
             imageUrl: null,
             user: auth.currentUser.displayName,
             profile_picture: auth.currentUser.photoURL,

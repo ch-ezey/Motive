@@ -1,7 +1,8 @@
 import { StyleSheet, Image, View, Text, TouchableOpacity } from 'react-native'
 import {Divider} from 'react-native-elements'
-import { auth, db } from '../../firebase'
+import { auth, db, storage } from '../../firebase'
 import { collection, doc, updateDoc, arrayUnion, arrayRemove, deleteDoc } from '@firebase/firestore'
+import { deleteObject, ref } from '@firebase/storage'
 
 const Post = ({post}) => {
 
@@ -40,9 +41,17 @@ const Post = ({post}) => {
     const postCollectionRef = collection(postOwnerEmailRef, 'posts');
     const postId = doc(postCollectionRef, post.id);
 
+    const postImageRef = ref(storage,  post.owner_uid + '/' + 'posts/' + post.fileName) //where the post is stored     
+
     deleteDoc(postId)
     .then(() => {
       console.log('Document Deleted Successfully')
+      // Delete the file
+      deleteObject(postImageRef).then(() => {
+        console.log('File Deleted Successfully')
+      }).catch((error) => {
+        console.error('Error Deleting File: ', error )
+      });
     })
     .catch(error => {
       console.error('Error Deleting Document: ', error )
