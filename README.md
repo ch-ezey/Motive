@@ -28,13 +28,12 @@ Experience "Motive" in action by accessing our live demo:
 To ensure a smooth development and testing process, we emulate "Motive" using Android Studio. This approach allows for comprehensive testing, debugging, and performance optimization.
 
 ## Showcase for Recruiters
-## Showcase of Full Stack Development Skills
 This repository serves as a comprehensive showcase of my full-stack development skills, demonstrating my ability to seamlessly integrate frontend and backend components to create a powerful and user-friendly application. Through "Motive," I have showcased my proficiency in the following areas:
 
 **Frontend Development:**
 - **User Interface (UI) Design:** I have designed an intuitive and visually appealing user interface that prioritizes the user experience. The modern design principles incorporated into the app contribute to its aesthetic appeal and usability.
 
-- **Cross-Platform Compatibility:** By choosing React Native, I've ensured that "Motive" functions seamlessly on both Android and iOS devices, providing a consistent and engaging user experience across platforms.
+- **Android Compatibility:** By opting for React Native, I've ensured that "Motive" delivers a seamless and engaging user experience, currently available exclusively on Android devices.
 
 - **Mobile App Development:** The development of the mobile application, using React Native, showcases my skills in building mobile apps from the ground up, including responsive layouts, navigation, and interactive components.
 
