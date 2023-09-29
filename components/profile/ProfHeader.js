@@ -15,10 +15,9 @@ const ProfHeader = ({userInfo}) => {
 
   // const user = auth.currentUser
   
-  const profile_picture = userInfo.profile_picture;
   const username = userInfo.username;
 
-  console.log(userInfo);
+  // console.log(userInfo);
 
   return (
     <View style={styles.container}>

@@ -3,9 +3,10 @@ import React, { useEffect, useState } from 'react'
 import { BottomTabIcons } from '../components/universal/BottomTabs'
 import BottomTabs from '../components/universal/BottomTabs'
 import ProfHeader from '../components/profile/ProfHeader'
-import { collection, collectionGroup, doc, getDocs, onSnapshot, query, where } from '@firebase/firestore'
+import { collection, collectionGroup, doc, onSnapshot, query, where } from '@firebase/firestore'
 import { auth, db } from '../firebase'
 import ProfPosts from '../components/profile/ProfPosts'
+import ProfInfo from '../components/profile/ProfInfo'
 
 const ProfileScreen = ({navigation}) => {
 
@@ -21,7 +22,6 @@ const ProfileScreen = ({navigation}) => {
   useEffect(() => {
     onSnapshot(userRef, (snap) => {
       setUserInfo(snap.data())
-      // console.log("Current data: ", snap.data());
     });
     onSnapshot(userPostsRef, (snap) => {
       setPostInfo(snap.docs.map(post => (
@@ -33,6 +33,7 @@ const ProfileScreen = ({navigation}) => {
   return (
     <SafeAreaView style={styles.container}>
       <ProfHeader userInfo={userInfo}/>
+      <ProfInfo userInfo={userInfo}/>
       {postInfo.map((postInfo, index) => (
           <ProfPosts postInfo={postInfo} key={index}/>
         ))}
