@@ -10,14 +10,6 @@ const ProfInfo = ({userInfo}) => {
   const userPostsRef = query(postCollectionRef, where('owner_uid', '==', auth.currentUser.uid));
 
   const snapshot = getCountFromServer(userPostsRef);
-
-  // console.log('count: ', snapshot.data().count);
-
-  // useEffect(() => {
-  //   onSnapshot(snapshot, (snap) => {
-  //     console.log(snap );
-  //   });
-  // }, []);
   
   const username = userInfo.username;
   const profile_picture = userInfo.profile_picture;
@@ -37,18 +29,18 @@ const ProfInfo = ({userInfo}) => {
       <View style={styles.infoContainer}>
 
         <View style={styles.info}>
-        <Text style={{color: 'white', textAlign: 'center'}}>0</Text>
-          <Text style={{color: 'white'}}>Posts</Text>
-        </View>
-
-        <View style={styles.info}>
-        <Text style={{color: 'white', textAlign: 'center'}}>0</Text>
-          <Text style={{color: 'white'}}>Followers</Text>
+          <Text style={{color: 'white', textAlign: 'center'}}>0</Text>
+          <Text style={styles.infoText}>Posts</Text>
         </View>
 
         <View style={styles.info}>
           <Text style={{color: 'white', textAlign: 'center'}}>0</Text>
-          <Text style={{color: 'white'}}>Following</Text>
+          <Text style={styles.infoText}>Followers</Text>
+        </View>
+
+        <View style={styles.info}>
+          <Text style={{color: 'white', textAlign: 'center'}}>0</Text>
+          <Text style={styles.infoText}>Following</Text>
         </View>
 
       </View>
@@ -85,12 +77,17 @@ const styles = StyleSheet.create({
     // borderWidth: 1,
   },
 
+  infoText: {
+    color: 'white',
+    fontWeight: '500'
+  },
+
   pfp: {
     height: '100%', 
     width: '100%', 
     borderRadius: 100, 
     borderColor: 'white', 
-    borderWidth: 1.5
+    // borderWidth: 1.5
   }
 });
 

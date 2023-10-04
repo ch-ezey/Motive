@@ -124,8 +124,7 @@ const FormikPostUploader = ({image, navigation}) => {
         <Formik
             initialValues={{caption: ''}}
             onSubmit={async (values) => {
-                await onUpload(values.caption)
-                navigation.goBack();
+                await onUpload(values.caption).then(navigation.goBack());
             }}
             validationSchema={uploadPostSchema}
             validateOnMount={true}

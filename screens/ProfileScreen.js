@@ -34,9 +34,10 @@ const ProfileScreen = ({navigation}) => {
     <SafeAreaView style={styles.container}>
       <ProfHeader userInfo={userInfo}/>
       <ProfInfo userInfo={userInfo}/>
-      {postInfo.map((postInfo, index) => (
+      {/* {postInfo.map((postInfo, index) => (
           <ProfPosts postInfo={postInfo} key={index}/>
-        ))}
+        ))} */}
+      <ProfPosts postInfo={postInfo}/>
       <BottomTabs navigation={navigation} icons={BottomTabIcons} />
     </SafeAreaView>
   )
@@ -46,22 +47,8 @@ const styles = StyleSheet.create({
   container: {
   backgroundColor: '#082032',
   flex: 1,
-},
-
-headerContainer: {
-  flexDirection: 'row',
-  justifyContent: 'space-between',
-  alignItems: 'center',
-  marginHorizontal: 7,
-  marginVertical: 10,
-},
-
-headerText: {
-  color: 'white',
-  fontWeight: '700',
-  fontSize: 22,
-  marginRight: 25,
 }
+
 });
 
 export default ProfileScreen
