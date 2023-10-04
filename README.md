@@ -23,6 +23,9 @@ Our "Motive" project offers a rich array of features:
 Experience "Motive" in action by accessing our live demo:
 
 - [**Motive Live Demo**]
+<p>
+    <img src="./assets/screenshots/Demo1.gif" width="250">
+</p>
 ![](https://github.com/naechebango/Motive/blob/master/assets/screenshots/Demo1.gif)
 
 ## Android Studio Emulation
