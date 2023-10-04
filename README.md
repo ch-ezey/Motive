@@ -21,8 +21,6 @@ Our "Motive" project offers a rich array of features:
 
 ## Demo
 Experience "Motive" in action by accessing our live demo:
-
-- [**Motive Live Demo**]
 <p>
     <img src="./assets/screenshots/Demo1.gif" width="250">
     <img src="./assets/screenshots/Demo2.gif" width="250">
