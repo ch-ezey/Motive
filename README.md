@@ -23,7 +23,7 @@ Our "Motive" project offers a rich array of features:
 Experience "Motive" in action by accessing our live demo:
 
 - [**Motive Live Demo**]
-- ![](https://github.com/naechebango/Motive/blob/master/assets/screenshots/Demo1.gif)
+![](https://github.com/naechebango/Motive/blob/master/assets/screenshots/Demo1.gif)
 
 ## Android Studio Emulation
 To ensure a smooth development and testing process, we emulate "Motive" using Android Studio. This approach allows for comprehensive testing, debugging, and performance optimization.
