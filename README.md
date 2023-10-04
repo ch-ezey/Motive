@@ -25,8 +25,9 @@ Experience "Motive" in action by accessing our live demo:
 - [**Motive Live Demo**]
 <p>
     <img src="./assets/screenshots/Demo1.gif" width="250">
+    <img src="./assets/screenshots/Demo2.gif" width="250">
+    <img src="./assets/screenshots/Demo3.gif" width="250">
 </p>
-![](https://github.com/naechebango/Motive/blob/master/assets/screenshots/Demo1.gif)
 
 ## Android Studio Emulation
 To ensure a smooth development and testing process, we emulate "Motive" using Android Studio. This approach allows for comprehensive testing, debugging, and performance optimization.
