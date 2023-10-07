@@ -1,13 +1,10 @@
 # Motive - Your Ultimate Student Social Platform
 
-## Introduction
-Welcome to the "Motive" GitHub repository—a showcase of my ongoing journey in developing a dynamic React Native mobile application geared towards the vibrant student community. "Motive" is more than just an app; it's a social platform designed to help students discover and participate in the most exciting parties, university/society events, and connect with friends to make these experiences unforgettable. This repository is a testament to my ability to create and maintain innovative software, with a focus on React Native and Firebase integration.
-
 ## Project Overview
-"Motive" is the ultimate social media platform tailored exclusively for students. With an intuitive user interface and powerful features, it aims to revolutionize the way students find and host social events, connect with peers, and create lasting memories. Built using React Native, this app ensures a seamless cross-platform experience for both Android and iOS users. The database is powered by Firebase, providing real-time data synchronization and robust authentication mechanisms.
+Welcome to the "Motive" GitHub repository—a showcase of my ongoing project developing a dynamic React Native mobile application aimed towards the vibrant student community. "Motive" is a social platform designed to help students discover and host exciting parties, university/society events, and connect with other students to help find friends to make these experiences unforgettable. This repository is a testament to my ability to create and maintain innovative software, with a focus on React Native and RESTful API integration.
 
 ## Key Features
-Our "Motive" project offers a rich array of features:
+"Motive" project offers a rich array of features:
 
 1. **Event Discovery:** Find the hottest parties, university events, and gatherings in your area with ease.
 
@@ -64,6 +61,4 @@ If you're interested in contributing to this exciting project or exploring oppor
 - **Android Studio:** For emulation and testing.
 
 ## Contact
-For inquiries, collaborations, or questions, you can reach me at [cezey01@gmail.com].
-
-Thank you for visiting this repository and sharing in the excitement of "Motive." Together, we're making student life more fun and memorable!
+For inquiries, collaborations, or questions, you can reach me at cezey01@gmail.com.
