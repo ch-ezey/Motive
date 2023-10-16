@@ -1,13 +1,14 @@
 import { View, Text, StyleSheet } from 'react-native'
 import React from 'react'
 import { Image } from 'react-native-elements';
+import { ScrollView } from 'react-native-gesture-handler';
 
 const ProfPosts = ({postInfo}) => {
 
   // console.log(postInfo[0].imageUrl);
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       
       {/* <View style={{
           width: '33%',
@@ -30,7 +31,7 @@ const ProfPosts = ({postInfo}) => {
         }}>
        <Image source={{uri: postInfo[0].imageUrl}} style={{height: '100%', width: '100%',}}/>
       </View> */}
-    </View>
+    </ScrollView>
   )
 }
 
@@ -41,7 +42,7 @@ const styles = StyleSheet.create({
     // alignItems: 'center',
     // flexDirection: 'row',
     margin: 5,
-    // height: "auto",
+    height: "100%",
     paddingVertical: 10,
     paddingHorizontal: 5,
     borderColor: 'white',

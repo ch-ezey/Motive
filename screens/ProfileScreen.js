@@ -23,6 +23,7 @@ const ProfileScreen = ({navigation}) => {
     onSnapshot(userRef, (snap) => {
       setUserInfo(snap.data())
     });
+    
     onSnapshot(userPostsRef, (snap) => {
       setPostInfo(snap.docs.map(post => (
         {id: post.id, ...post.data()}

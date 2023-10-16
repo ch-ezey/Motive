@@ -1,4 +1,4 @@
-import { Text, SafeAreaView, StyleSheet, ScrollView, View } from 'react-native'
+import { SafeAreaView, StyleSheet } from 'react-native'
 import React from 'react'
 import Header from '../components/home/Header'
 import BottomTabs from '../components/universal/BottomTabs'
@@ -9,7 +9,7 @@ const HomeScreen = ({navigation}) => {
   return (
     <SafeAreaView style={styles.container}>
       <Header navigation={navigation} />
-      <PostScreen/>
+      <PostScreen navigation={navigation}/>
       <BottomTabs navigation={navigation} icons={BottomTabIcons} />
     </SafeAreaView>
   )

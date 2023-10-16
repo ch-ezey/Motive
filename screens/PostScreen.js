@@ -1,17 +1,15 @@
-import { ScrollView, View, Text } from 'react-native'
-import React, { useCallback, useEffect, useState } from 'react'
+import { FlatList, ScrollView } from 'react-native'
+import React, { useEffect, useState } from 'react'
 import Post from '../components/home/Post'
-import { POSTS } from '../data/posts'
 import { db } from '../firebase'
 import { collectionGroup, onSnapshot, orderBy, query } from '@firebase/firestore'
 
-const PostScreen = () => {
+const PostScreen = ({navigation}) => {
 
   const [posts, setPosts] = useState([])
 
   const postsRef = collectionGroup(db, 'posts');
   const orderPostsRef = query(postsRef, orderBy('createdAt', 'desc'));
-  // const postSnap = getDocs((orderPostsRef))
 
   useEffect(() => {
     onSnapshot(orderPostsRef, (snap) => {
@@ -22,11 +20,19 @@ const PostScreen = () => {
   }, []);
 
   return (
-      <ScrollView style={{marginBottom: 50}}>
-        {posts.map((post, index) => (
-          <Post post={post} key={index}/>
-        ))}
-      </ScrollView>
+    <FlatList
+      // keyExtractor={(item) => item.uid}
+      data={posts}
+      renderItem={({ item }) => (
+        <Post post={item} navigation={navigation}/>
+      )}
+    />
+
+      // <ScrollView style={{marginBottom: 50}}>
+      //   {posts.map((post, index) => (
+      //     <Post post={post} key={index} navigation={navigation}/>
+      //   ))}
+      // </ScrollView>
   )
 }
 

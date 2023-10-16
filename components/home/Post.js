@@ -4,7 +4,7 @@ import { auth, db, storage } from '../../firebase'
 import { collection, doc, updateDoc, arrayUnion, arrayRemove, deleteDoc } from '@firebase/firestore'
 import { deleteObject, ref } from '@firebase/storage'
 
-const Post = ({post}) => {
+const Post = ({post, navigation}) => {
 
   const handleGoing = post => {
 
@@ -66,7 +66,7 @@ const Post = ({post}) => {
         <PostImage post={post}/>
         {/* <Divider width={1} orientation='horizontal' /> */}
         <View style={{marginTop: 2}}>
-          <PostFooter post={post} handleGoing={handleGoing}/>
+          <PostFooter post={post} navigation={navigation} handleGoing={handleGoing}/>
           <View style={{marginLeft: 18}}>
             <Going post={post}/>
             <Caption post={post}/>
@@ -125,7 +125,7 @@ const PostImage = ({post}) => (
   </View>
 )
 
-const PostFooter = ({handleGoing, post}) => (
+const PostFooter = ({handleGoing, post, navigation}) => (
   <View style={{flexDirection: 'row'}}>
 
     <View style={styles.allFooterIcon}>
@@ -141,7 +141,13 @@ const PostFooter = ({handleGoing, post}) => (
         </Image>
       </TouchableOpacity>
 
-      <TouchableOpacity>
+      <TouchableOpacity 
+        onPress={(() => {
+          navigation.navigate('CommentScreen'
+          // , {postId: item.id}
+          );
+        })}>
+
         <Image style={styles.footerIcon}
           source={require('../../assets/icons/comment.png')}>
         </Image>
