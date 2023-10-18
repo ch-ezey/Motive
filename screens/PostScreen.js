@@ -27,12 +27,6 @@ const PostScreen = ({navigation}) => {
         <Post post={item} navigation={navigation}/>
       )}
     />
-
-      // <ScrollView style={{marginBottom: 50}}>
-      //   {posts.map((post, index) => (
-      //     <Post post={post} key={index} navigation={navigation}/>
-      //   ))}
-      // </ScrollView>
   )
 }
 

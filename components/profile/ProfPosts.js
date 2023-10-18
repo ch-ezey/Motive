@@ -1,37 +1,22 @@
-import { View, Text, StyleSheet } from 'react-native'
+import { View, StyleSheet, TouchableOpacity, useWindowDimensions } from 'react-native'
 import React from 'react'
 import { Image } from 'react-native-elements';
-import { ScrollView } from 'react-native-gesture-handler';
 
-const ProfPosts = ({postInfo}) => {
+const ProfPosts = ({post}) => {
 
-  // console.log(postInfo[0].imageUrl);
+  const size = (useWindowDimensions().width - 22)/3;
 
   return (
-    <ScrollView style={styles.container}>
-      
-      {/* <View style={{
-          width: '33%',
-          height: 100,
-          // flex: 1,
-        }}>
-       <Image source={{uri: postInfo[0].imageUrl}} style={{height: '100%', width: '100%',}}/>
+    <TouchableOpacity>
+      <View
+        style={{ width: size, height: size, margin: 2 }}
+      >
+        <Image 
+          source={{ uri: post.imageUrl }}
+          style={{ height: '100%', width: '100%', resizeMode: 'cover' }}
+        />
       </View>
-      <View style={{
-          width: '33%',
-          height: 100,
-          // flex: 1,
-        }}>
-       <Image source={{uri: postInfo[0].imageUrl}} style={{height: '100%', width: '100%',}}/>
-      </View>
-      <View style={{
-          width: '33%',
-          height: 100,
-          // flex: 1,
-        }}>
-       <Image source={{uri: postInfo[0].imageUrl}} style={{height: '100%', width: '100%',}}/>
-      </View> */}
-    </ScrollView>
+      </TouchableOpacity>
   )
 }
 
@@ -41,12 +26,12 @@ const styles = StyleSheet.create({
     // justifyContent: 'space-around',
     // alignItems: 'center',
     // flexDirection: 'row',
-    margin: 5,
-    height: "100%",
-    paddingVertical: 10,
-    paddingHorizontal: 5,
-    borderColor: 'white',
-    borderWidth: 1,
+    // margin: 5,
+    // height: "100%",
+    // paddingVertical: 10,
+    // paddingHorizontal: 5,
+    // borderColor: 'white',
+    // borderWidth: 1,
     // borderRadius: 10
     
   },

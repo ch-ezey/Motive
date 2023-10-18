@@ -6,15 +6,7 @@ import { collection, collectionGroup, getCountFromServer, onSnapshot, query, whe
 
 const ProfInfo = ({userInfo}) => {
 
-  const postCollectionRef = collection(db, 'posts');
-  const userPostsRef = query(postCollectionRef, where('owner_uid', '==', auth.currentUser.uid));
-
-  const snapshot = getCountFromServer(userPostsRef);
-  
-  const username = userInfo.username;
-  const profile_picture = userInfo.profile_picture;
-
-  console.log(profile_picture);
+  // console.log(profile_picture);
 
   return (
     <View style={styles.container}>
@@ -23,7 +15,7 @@ const ProfInfo = ({userInfo}) => {
           width: 100,
           height: 100,
         }}>
-       <Image source={{ uri: profile_picture }} style={styles.pfp}/>
+       <Image source={{ uri: userInfo.profile_picture }} style={styles.pfp}/>
       </View>
 
       <View style={styles.infoContainer}>
@@ -59,7 +51,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 5,
     borderColor: 'white',
-    borderWidth: 1,
+    // borderWidth: 1,
     // borderRadius: 10
     
   },
