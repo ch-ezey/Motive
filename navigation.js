@@ -1,4 +1,5 @@
 import { createStackNavigator } from '@react-navigation/stack'
+import { createDrawerNavigator } from '@react-navigation/drawer';
 import { NavigationContainer } from '@react-navigation/native'
 import React from 'react'
 import HomeScreen from './screens/HomeScreen'
@@ -10,12 +11,15 @@ import FriendScreen from './screens/FriendScreen'
 import LoginScreen from './screens/LoginScreen'
 import SignupScreen from './screens/SignupScreen'
 import CommentScreen from './screens/CommentScreen'
+import UserScreen from './screens/UserScreen'
+
 
 const screenOptions = {
     headerShown: false
 }
 
 const PostStack = createStackNavigator();
+// const DrawerStack = createDrawerNavigator();
 
 export const SignedInStack = () => (
     <NavigationContainer >
@@ -30,6 +34,7 @@ export const SignedInStack = () => (
             <PostStack.Screen name='ProfileScreen' component={ProfileScreen} />
             <PostStack.Screen name='FriendScreen' component={FriendScreen} />
             <PostStack.Screen name='CommentScreen' component={CommentScreen} />
+            <PostStack.Screen name='UserScreen' component={UserScreen} />
             
      </PostStack.Navigator>
     </NavigationContainer>
@@ -48,3 +53,14 @@ export const SignedOutStack = () => (
 
 )
 
+// export const NavDrawer = () => (
+//     <NavigationContainer>
+//         <Drawer.Navigator useLegacyImplementation 
+//             initialRouteName="ProfileScreen">
+            
+//             <Drawer.Screen name="ProfileScreen" component={ProfileScreen} />
+//             {/* <Drawer.Screen name="Notifications" component={NotificationsScreen} /> */}
+
+//         </Drawer.Navigator>
+//     </NavigationContainer>
+// )

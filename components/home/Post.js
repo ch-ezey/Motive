@@ -62,7 +62,7 @@ const Post = ({post, navigation}) => {
 
     <View style={{marginBottom: 10 }}>
         <Divider width={1} orientation='horizontal' />
-        <PostHeader post={post} deletePost={deletePost}/>
+        <PostHeader post={post} navigation={navigation} deletePost={deletePost}/>
         <PostImage post={post}/>
         {/* <Divider width={1} orientation='horizontal' /> */}
         <View style={{marginTop: 2}}>
@@ -78,7 +78,7 @@ const Post = ({post, navigation}) => {
   )
 }
 
-const PostHeader = ({deletePost, post}) => (
+const PostHeader = ({deletePost, post, navigation}) => (
 
   <View 
     style={{
@@ -89,7 +89,14 @@ const PostHeader = ({deletePost, post}) => (
     }}
   >
     <View >
-    <TouchableOpacity style={{flexDirection: 'row', alignItems: 'center'}}>
+    <TouchableOpacity 
+      style={{flexDirection: 'row', alignItems: 'center'}} 
+      onPress={(() => {
+        // console.log(post.owner_uid)
+        navigation.navigate('UserScreen', {
+          user: post.owner_uid,
+        })
+      })}>
       <Image source={{uri: post.profile_picture }} style={styles.post}/>
       
         <Text style={{color: 'white', marginLeft: 5, fontWeight: '700'}}>
@@ -114,13 +121,13 @@ const PostImage = ({post}) => (
 
   <View
     style={{
-      width: '100%',
+      width: 'auto',
       height: 400,
     }}
   >
     <Image 
       source={{ uri: post.imageUrl }}
-      style={{ height: '100%', width: '100%', resizeMode: 'cover' }}
+      style={{ height: '100%', width: '100%', resizeMode: 'cover', backgroundColor: 'grey' }}
      />
   </View>
 )

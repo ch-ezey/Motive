@@ -3,7 +3,7 @@ import React from 'react'
 import { auth, db } from '../../firebase'
 import { doc, getDoc } from '@firebase/firestore';
 
-const test = (userInfo) => {
+const test = () => {
   try {
     console.log(auth.currentUser.displayName)
   } catch(error) {
@@ -11,24 +11,32 @@ const test = (userInfo) => {
   }
 }
 
-const ProfHeader = ({userInfo}) => {
+const UserHeader = ({userInfo, navigation}) => {
   
   const username = userInfo.username;
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity 
-        onPress={test}
+      <View>
+        <TouchableOpacity
+          onPress={() => {
+            navigation.goBack()
+          }}
         >
-    <Text style={styles.headerText}>{username}</Text>
-      </TouchableOpacity>
-
-      <View style={styles.iconContainer}>
-        <TouchableOpacity>
           <Image style={styles.icon} 
-            source={require('../../assets/icons/menu.png')}></Image>
+            source={require('../../assets/icons/back.png')}></Image>
         </TouchableOpacity>
       </View>
+      
+      <View style={{marginHorizontal: 5}}>
+        <TouchableOpacity 
+          onPress={test}
+        >
+          <Text style={styles.headerText}>{username}</Text>
+        </TouchableOpacity>
+      </View>
+
+      <View></View>
     </View>
   )
 }
@@ -42,26 +50,21 @@ const styles = StyleSheet.create({
       margin: 5,
     },
 
-    iconContainer: {
-      flexDirection: 'row',
-    },
-
     icon: {
       tintColor: 'white',
       marginTop: 0,
-      marginHorizontal: 10,
+      marginHorizontal: 0,
       width: 32,
       height: 32,
-      resizeMode: 'contain',
+      // resizeMode: 'contain',
     },
 
     headerText: {
         color: 'white',
         fontWeight: '700',
         fontSize: 26,
-        marginLeft: 5,
         textTransform: 'uppercase'
       }
   });
 
-  export default ProfHeader
+  export default UserHeader

@@ -27,7 +27,6 @@ const SignupForm = ({image, navigation}) => {
 
     const [selectedImage, setSelectedImage] = useState();
     const [selectedImageUrl, setSelectedImageUrl] = useState();
-    const [userInput, setUserInput] = useState({});
     
     useEffect(() => {
         if (image) {

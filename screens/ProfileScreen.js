@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { BottomTabIcons } from '../components/universal/BottomTabs'
 import BottomTabs from '../components/universal/BottomTabs'
 import ProfHeader from '../components/profile/ProfHeader'
-import { collection, collectionGroup, doc, onSnapshot, orderBy, query, where } from '@firebase/firestore'
+import { collectionGroup, doc, getDoc, onSnapshot, orderBy, query, where } from '@firebase/firestore'
 import { auth, db } from '../firebase'
 import ProfPosts from '../components/profile/ProfPosts'
 import ProfInfo from '../components/profile/ProfInfo'
@@ -11,36 +11,49 @@ import { FlatList } from 'react-native-gesture-handler'
 
 const ProfileScreen = ({navigation}) => {
 
-  const [userInfo, setUserInfo] = useState([]);
+  const loadingIndicator = <Text style={styles.headerText}>Loading user data...</Text>;
+
+  const [userInfo, setUserInfo] = useState(null);
   const [posts, setPostInfo] = useState([]);
 
   const numColumns = 3;
   
-  const usersCollectionRef = collection(db, 'users');
-  const userRef = doc(usersCollectionRef, auth.currentUser.uid);
+  const userRef = doc(db, "users", auth.currentUser.uid);
   
   const postsRef = collectionGroup(db, 'posts');
-  // const orderPostsRef = query(postsRef, orderBy('createdAt', 'desc'));
-  const userPostsRef = query(postsRef, where('owner_uid', '==', auth.currentUser.uid));
+  const orderPostsRef = query(postsRef, orderBy('createdAt', 'desc'));
+  const userPostsRef = query(orderPostsRef, where('owner_uid', '==', auth.currentUser.uid));
 
-  useEffect(() => {    
+  const getUserDetails = async () => {
+    const docSnap = await getDoc(userRef)
+
+    setUserInfo(docSnap.data())
+  }
+
+  console.log(userInfo)
+
+  useEffect(() => {  
+    const fetchData = async () => {
+      getUserDetails();
+    }
+    
+    fetchData();
+    
     onSnapshot(userPostsRef, (snap) => {
       setPostInfo(snap.docs.map(post => (
         {id: post.id, ...post.data()}
       )))
-    });
-
-    onSnapshot(userRef, (snap) => {
-      setUserInfo(snap.data())
-    });    
+    });   
   }, []);
-  // console.log(posts)
-  // console.log(userInfo)
 
   return (
     <SafeAreaView style={styles.container}>
-      <ProfHeader userInfo={userInfo}/>
-      <ProfInfo userInfo={userInfo}/>
+      {userInfo ? (
+        <>
+          <ProfHeader userInfo={userInfo} />
+          <ProfInfo userInfo={userInfo} />
+        </>
+      ) : loadingIndicator}
       <FlatList
         contentContainerStyle={{}}
         style={styles.postContainer}
@@ -70,6 +83,14 @@ const styles = StyleSheet.create({
     // borderWidth: 1,
     // flex: 1,
     // width: "auto"
+  },
+  
+  headerText: {
+    color: 'white',
+    fontWeight: '700',
+    fontSize: 26,
+    marginLeft: 5,
+    textTransform: 'uppercase'
   }
 
 });

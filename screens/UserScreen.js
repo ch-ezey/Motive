@@ -1,12 +1,99 @@
-import { View, Text } from 'react-native'
-import React from 'react'
+import { TouchableOpacity, Image, View, Text, StyleSheet, SafeAreaView, useWindowDimensions } from 'react-native'
+import React, { useEffect, useState } from 'react'
+import { BottomTabIcons } from '../components/universal/BottomTabs'
+import BottomTabs from '../components/universal/BottomTabs'
+import UserHeader from '../components/profile/UserHeader'
+import { collectionGroup, doc, getDoc, onSnapshot, orderBy, query, where } from '@firebase/firestore'
+import { auth, db } from '../firebase'
+import UserPosts from '../components/profile/UserPosts'
+import UserInfo from '../components/profile/UserInfo'
+import { FlatList } from 'react-native-gesture-handler'
 
-const UserScreen = () => {
+const UserScreen = ({route, navigation}) => {
+
+  const loadingIndicator = <Text style={styles.headerText}>Loading user data...</Text>;
+
+  const userUID = route.params?.user;
+
+  console.log(userUID)
+  
+  const [userInfo, setUserInfo] = useState(null);
+  const [posts, setPostInfo] = useState([]);
+
+  const numColumns = 3;
+  
+  const userRef = doc(db, "users", userUID);
+  
+  const postsRef = collectionGroup(db, 'posts');
+  const orderPostsRef = query(postsRef, orderBy('createdAt', 'desc'));
+  const userPostsRef = query(orderPostsRef, where('owner_uid', '==', userUID));
+
+  const getUserDetails = async () => {
+    const docSnap = await getDoc(userRef)
+
+    setUserInfo(docSnap.data())
+  }
+
+  useEffect(() => {  
+    const fetchData = async () => {
+      getUserDetails();
+    }
+    
+    fetchData();
+    
+    onSnapshot(userPostsRef, (snap) => {
+      setPostInfo(snap.docs.map(post => (
+        {id: post.id, ...post.data()}
+      )))
+    });   
+  }, []);
+
   return (
-    <View>
-      <Text>UserScreen</Text>
-    </View>
+    <SafeAreaView style={styles.container}>
+      {userInfo ? (
+        <>
+          <UserHeader navigation={navigation} userInfo={userInfo} />
+          <UserInfo userInfo={userInfo} />
+        </>
+      ) : loadingIndicator}
+      <FlatList
+        contentContainerStyle={{}}
+        style={styles.postContainer}
+        key={numColumns}
+        numColumns={numColumns}
+        data={posts}
+        renderItem={({ item }) => (
+          <UserPosts post={item}/>
+        )}
+      />
+    </SafeAreaView>
   )
 }
+
+const styles = StyleSheet.create({
+  container: {
+  backgroundColor: '#082032',
+  flex: 1,
+  },
+
+  postContainer: {
+    margin: 5,
+    // height: "100%",
+    // paddingVertical: 10,
+    borderColor: 'white',
+    // borderWidth: 1,
+    // flex: 1,
+    // width: "auto"
+  },
+
+  headerText: {
+    color: 'white',
+    fontWeight: '700',
+    fontSize: 26,
+    marginLeft: 5,
+    textTransform: 'uppercase'
+  }
+
+});
 
 export default UserScreen
