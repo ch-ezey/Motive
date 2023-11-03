@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { BottomTabIcons } from '../components/universal/BottomTabs'
 import BottomTabs from '../components/universal/BottomTabs'
 import ProfHeader from '../components/profile/ProfHeader'
-import { collectionGroup, doc, getDoc, onSnapshot, orderBy, query, where } from '@firebase/firestore'
+import { collectionGroup, doc, getCountFromServer, getDoc, onSnapshot, orderBy, query, where } from '@firebase/firestore'
 import { auth, db } from '../firebase'
 import ProfPosts from '../components/profile/ProfPosts'
 import ProfInfo from '../components/profile/ProfInfo'
@@ -26,8 +26,19 @@ const ProfileScreen = ({navigation}) => {
 
   const getUserDetails = async () => {
     const docSnap = await getDoc(userRef)
+    const userData = (docSnap.data())
+    const updatedUserData = {
+      ...userData, // Spread the existing user data
+      postCount: await getNumPosts(), // Add the new property
+    };
+    setUserInfo(updatedUserData);
+    console.log(updatedUserData);
+  }
 
-    setUserInfo(docSnap.data())
+  const getNumPosts = async () => {
+    const postsSnap = await getCountFromServer(userPostsRef)
+    const numOfPosts = postsSnap.data().count;
+    return numOfPosts
   }
 
   console.log(userInfo)

@@ -21,7 +21,7 @@ const ProfInfo = ({userInfo}) => {
       <View style={styles.infoContainer}>
 
         <View style={styles.info}>
-          <Text style={styles.infoText}>0</Text>
+          <Text style={styles.infoText}>{userInfo.postCount}</Text>
           <Text style={styles.infoText}>Posts</Text>
         </View>
 

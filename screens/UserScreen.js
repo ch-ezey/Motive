@@ -1,49 +1,70 @@
-import { TouchableOpacity, Image, View, Text, StyleSheet, SafeAreaView, useWindowDimensions } from 'react-native'
 import React, { useEffect, useState } from 'react'
-import { BottomTabIcons } from '../components/universal/BottomTabs'
-import BottomTabs from '../components/universal/BottomTabs'
+import { TouchableOpacity, Image, View, Text, StyleSheet, SafeAreaView, useWindowDimensions } from 'react-native'
 import UserHeader from '../components/profile/UserHeader'
-import { collectionGroup, doc, getDoc, onSnapshot, orderBy, query, where } from '@firebase/firestore'
+import { collection, collectionGroup, doc, getCountFromServer, getDoc, onSnapshot, orderBy, query, where } from '@firebase/firestore'
 import { auth, db } from '../firebase'
 import UserPosts from '../components/profile/UserPosts'
 import UserInfo from '../components/profile/UserInfo'
 import { FlatList } from 'react-native-gesture-handler'
 
-const UserScreen = ({route, navigation}) => {
-
+const UserScreen = ({ route, navigation }) => {
+  // A loading indicator for when user data is loading
   const loadingIndicator = <Text style={styles.headerText}>Loading user data...</Text>;
 
+  // Extract the user's unique ID from the route parameters
   const userUID = route.params?.user;
 
-  console.log(userUID)
-  
   const [userInfo, setUserInfo] = useState(null);
   const [posts, setPostInfo] = useState([]);
 
   const numColumns = 3;
   
   const userRef = doc(db, "users", userUID);
-  
+
   const postsRef = collectionGroup(db, 'posts');
+  
+  // Query to retrieve posts in descending order of creation time
   const orderPostsRef = query(postsRef, orderBy('createdAt', 'desc'));
+  
+  // Query to retrieve posts owned by the user with the specified userUID
   const userPostsRef = query(orderPostsRef, where('owner_uid', '==', userUID));
 
+  // Function to fetch user details
   const getUserDetails = async () => {
-    const docSnap = await getDoc(userRef)
+    const docSnap = await getDoc(userRef);
+    const userData = docSnap.data();
 
-    setUserInfo(docSnap.data())
+    // Add the "postCount" property to the user data, and wait for the post count
+    const updatedUserData = {
+      ...userData, // Spread the existing user data
+      postCount: await getNumPosts(), // Add the new property
+    };
+
+    setUserInfo(updatedUserData);
+    console.log(updatedUserData);
+  }
+
+  // Function to get the number of posts for the user
+  const getNumPosts = async () => {
+    // Retrieve the post count from the server
+    const postsSnap = await getCountFromServer(userPostsRef);
+    const numOfPosts = postsSnap.data().count;
+    return numOfPosts;
   }
 
   useEffect(() => {  
+    // Fetch user details and user posts data
     const fetchData = async () => {
       getUserDetails();
     }
-    
+
+    console.log(userUID);
     fetchData();
-    
+
+    // Subscribe to changes in the user's posts
     onSnapshot(userPostsRef, (snap) => {
       setPostInfo(snap.docs.map(post => (
-        {id: post.id, ...post.data()}
+        { id: post.id, ...post.data() }
       )))
     });   
   }, []);
@@ -52,6 +73,7 @@ const UserScreen = ({route, navigation}) => {
     <SafeAreaView style={styles.container}>
       {userInfo ? (
         <>
+          {/* Display user header and info if userInfo is available, else display loading indicator */}
           <UserHeader navigation={navigation} userInfo={userInfo} />
           <UserInfo userInfo={userInfo} />
         </>
@@ -72,8 +94,8 @@ const UserScreen = ({route, navigation}) => {
 
 const styles = StyleSheet.create({
   container: {
-  backgroundColor: '#082032',
-  flex: 1,
+    backgroundColor: '#082032',
+    flex: 1,
   },
 
   postContainer: {
@@ -93,7 +115,6 @@ const styles = StyleSheet.create({
     marginLeft: 5,
     textTransform: 'uppercase'
   }
-
 });
 
-export default UserScreen
+export default UserScreen;
