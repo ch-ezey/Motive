@@ -19,9 +19,10 @@ Welcome to the "Motive" GitHub repository—a showcase of my ongoing project dev
 ## Demo
 Experience "Motive" in action by accessing our live demo:
 <p>
-    <img src="./assets/screenshots/Demo1.gif" width="250">
-    <img src="./assets/screenshots/Demo2.gif" width="250">
-    <img src="./assets/screenshots/Demo3.gif" width="250">
+    <img src="./assets/screenshots/Demo1.gif" width="200">
+    <img src="./assets/screenshots/Demo2.gif" width="200">
+    <img src="./assets/screenshots/Demo3.gif" width="200">
+    <img src="./assets/screenshots/Demo4.gif" width="200">
 </p>
 
 ## Android Studio Emulation
