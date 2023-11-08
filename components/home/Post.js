@@ -4,26 +4,24 @@ import { auth, db, storage } from '../../firebase'
 import { collection, doc, updateDoc, arrayUnion, arrayRemove, deleteDoc } from '@firebase/firestore'
 import { deleteObject, ref } from '@firebase/storage'
 
-const Post = ({post, navigation}) => {
+const Post = ({post, navigation, getPostDetails, openCommentSheet, closeCommentSheet}) => {
 
   const handleGoing = post => {
 
     const currentGoingStatus = !post.users_going.includes(
-      auth.currentUser.email
+      auth.currentUser.uid
     )
 
-    const usersCollectionRef = collection(db, 'users');
-    const postOwnerRef = doc(usersCollectionRef, post.owner_uid);
-    const postCollectionRef = collection(postOwnerRef, 'posts');
+    const postCollectionRef = collection(db, 'posts');
     const postId = doc(postCollectionRef, post.id);
     
     updateDoc(postId, {
       users_going: currentGoingStatus 
       ? arrayUnion(
-          auth.currentUser.email
+          auth.currentUser.uid
         )
       : arrayRemove(
-          auth.currentUser.email
+          auth.currentUser.uid
         )
     })
     .then(() => {
@@ -36,9 +34,7 @@ const Post = ({post, navigation}) => {
 
   const deletePost = post => {
 
-    const usersCollectionRef = collection(db, 'users');
-    const postOwnerEmailRef = doc(usersCollectionRef, post.owner_uid);
-    const postCollectionRef = collection(postOwnerEmailRef, 'posts');
+    const postCollectionRef = collection(db, 'posts');
     const postId = doc(postCollectionRef, post.id);
 
     const postImageRef = ref(storage,  post.owner_uid + '/' + 'posts/' + post.fileName) //where the post is stored     
@@ -66,7 +62,13 @@ const Post = ({post, navigation}) => {
         <PostImage post={post}/>
         {/* <Divider width={1} orientation='horizontal' /> */}
         <View style={{marginTop: 2}}>
-          <PostFooter post={post} navigation={navigation} handleGoing={handleGoing}/>
+          <PostFooter 
+            post={post} 
+            navigation={navigation} 
+            handleGoing={handleGoing}
+            openCommentSheet={openCommentSheet}
+            getPostDetails={getPostDetails}
+            />
           <View style={{marginLeft: 18}}>
             <Going post={post}/>
             <Caption post={post}/>
@@ -132,7 +134,7 @@ const PostImage = ({post}) => (
   </View>
 )
 
-const PostFooter = ({handleGoing, post, navigation}) => (
+const PostFooter = ({handleGoing, post, openCommentSheet, getPostDetails, navigation}) => (
   <View style={{flexDirection: 'row'}}>
 
     <View style={styles.allFooterIcon}>
@@ -140,7 +142,7 @@ const PostFooter = ({handleGoing, post, navigation}) => (
       <TouchableOpacity onPress={() => handleGoing(post)}>
         <Image style={
           post.users_going.includes(
-            auth.currentUser.email
+            auth.currentUser.uid
           ) ? styles.footerIconActive
           : styles.footerIcon
         }
@@ -150,9 +152,10 @@ const PostFooter = ({handleGoing, post, navigation}) => (
 
       <TouchableOpacity 
         onPress={(() => {
-          navigation.navigate('CommentScreen'
-          // , {postId: item.id}
-          );
+          // navigation.navigate('CommentScreen'
+          // // , {postId: item.id}
+          // );
+          openCommentSheet(post.postID)
         })}>
 
         <Image style={styles.footerIcon}

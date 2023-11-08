@@ -107,12 +107,15 @@ const FormikPostUploader = ({image, navigation}) => {
               const downloadUrl = await uploadImage(user.uid);
               postInput.imageUrl = downloadUrl;
           }
+
+          // Upload the post without "postID" for now
+          const postRef = await addDoc(collection(db, 'posts'), postInput);
+
+          // Retrieve the generated document ID
+          const postID = postRef.id;
           
-          await addDoc(collection(db, 'users', user.uid, 'posts'), postInput)
-          .catch((error) =>
-          {
-              console.log(error.message)
-          });
+          // Update the post document with "postID"
+          await setDoc(doc(db, 'posts', postID), { postID }, { merge: true });
           
           console.log('Data Submitted');
       } catch (error) {

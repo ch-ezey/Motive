@@ -14,7 +14,7 @@ const ProfileScreen = ({navigation}) => {
   const loadingIndicator = <Text style={styles.headerText}>Loading user data...</Text>;
 
   const [userInfo, setUserInfo] = useState(null);
-  const [posts, setPostInfo] = useState([]);
+  const [posts, setPosts] = useState([]);
 
   const numColumns = 3;
   
@@ -32,7 +32,6 @@ const ProfileScreen = ({navigation}) => {
       postCount: await getNumPosts(), // Add the new property
     };
     setUserInfo(updatedUserData);
-    console.log(updatedUserData);
   }
 
   const getNumPosts = async () => {
@@ -51,7 +50,7 @@ const ProfileScreen = ({navigation}) => {
     fetchData();
     
     onSnapshot(userPostsRef, (snap) => {
-      setPostInfo(snap.docs.map(post => (
+      setPosts(snap.docs.map(post => (
         {id: post.id, ...post.data()}
       )))
     });   

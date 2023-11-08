@@ -4,7 +4,7 @@ import Post from '../components/home/Post'
 import { db } from '../firebase'
 import { collectionGroup, onSnapshot, orderBy, query } from '@firebase/firestore'
 
-const PostScreen = ({navigation}) => {
+const PostScreen = ({navigation, openCommentSheet, closeCommentSheet}) => {
 
   const [posts, setPosts] = useState([])
 
@@ -16,6 +16,9 @@ const PostScreen = ({navigation}) => {
       setPosts(snap.docs.map(post => (
         {id: post.id, ...post.data()}
       )))
+      // console.log(snap.docs.map(post => (
+      //   {id: post.id, ...post.data()}
+      // )))
     });
   }, []);
 
@@ -24,7 +27,12 @@ const PostScreen = ({navigation}) => {
       // keyExtractor={(item) => item.uid}
       data={posts}
       renderItem={({ item }) => (
-        <Post post={item} navigation={navigation}/>
+        <Post 
+          post={item} 
+          navigation={navigation}
+          openCommentSheet={openCommentSheet}
+          closeCommentSheet={closeCommentSheet}
+          />
       )}
     />
   )
