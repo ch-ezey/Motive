@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, TouchableOpacity, Image} from 'react-native'
+import { View, Text, StyleSheet, TouchableOpacity, Image, KeyboardAvoidingView} from 'react-native'
 import React, { useState } from 'react'
 import { Divider } from 'react-native-elements'
 import { useIsFocused, useRoute } from '@react-navigation/native'
@@ -61,6 +61,7 @@ const BottomTabs = ({icons, navigation}) => {
     </TouchableOpacity>
   )
   return (
+    <KeyboardAvoidingView behavior='height'>
     <View style={styles.wrapper}>
       <Divider width={1} orientation={'horizontal'}/>
       <View style={styles.container}>
@@ -69,6 +70,7 @@ const BottomTabs = ({icons, navigation}) => {
         ))}
       </View>
     </View>
+    </KeyboardAvoidingView>
   )
 }
 
