@@ -6,56 +6,50 @@ import { deleteObject, ref } from '@firebase/storage'
 
 const Post = ({post, navigation, getPostDetails, openCommentSheet, closeCommentSheet}) => {
 
-  const handleGoing = post => {
-
-    const currentGoingStatus = !post.users_going.includes(
-      auth.currentUser.uid
-    )
-
+  const handleGoing = (post) => {
+    // Determine the current going status of the user
+    const currentGoingStatus = !post.users_going.includes(auth.currentUser.uid);
     const postCollectionRef = collection(db, 'posts');
     const postId = doc(postCollectionRef, post.id);
-    
-    updateDoc(postId, {
-      users_going: currentGoingStatus 
-      ? arrayUnion(
-          auth.currentUser.uid
-        )
-      : arrayRemove(
-          auth.currentUser.uid
-        )
-    })
-    .then(() => {
-      console.log('Document Updated Successfully')
-    })
-    .catch(error => {
-      console.error('Error Updating Document: ', error )
-    })
-  }
-
+  
+    // Helper function to update the going status in Firestore
+    const updateGoingStatus = async (status) => {
+      try {
+        // Update the document with the new going status
+        await updateDoc(postId, {
+          users_going: status ? arrayUnion(auth.currentUser.uid) : arrayRemove(auth.currentUser.uid),
+        });
+  
+        console.log('Document Updated Successfully');
+      } catch (error) {
+        console.error('Error Updating Document: ', error);
+      }
+    };
+  
+    // Call the helper function to update the going status
+    updateGoingStatus(currentGoingStatus);
+  };
+  
   const deletePost = post => {
-
     const postCollectionRef = collection(db, 'posts');
     const postId = doc(postCollectionRef, post.id);
-
-    const postImageRef = ref(storage,  post.owner_uid + '/' + 'posts/' + post.fileName) //where the post is stored     
-
+    const postImageRef = ref(storage, post.owner_uid + '/' + 'posts/' + post.fileName);
+  
     deleteDoc(postId)
-    .then(() => {
-      console.log('Document Deleted Successfully')
-      // Delete the file
-      deleteObject(postImageRef).then(() => {
-        console.log('File Deleted Successfully')
-      }).catch((error) => {
-        console.error('Error Deleting File: ', error )
+      .then(() => {
+        console.log('Document Deleted Successfully');
+        return deleteObject(postImageRef);
+      })
+      .then(() => {
+        console.log('File Deleted Successfully');
+      })
+      .catch((error) => {
+        console.error('Error Deleting: ', error);
       });
-    })
-    .catch(error => {
-      console.error('Error Deleting Document: ', error )
-    })
-  }
+  };
+  
 
   return (
-
     <View style={{marginBottom: 10 }}>
         <Divider width={1} orientation='horizontal' />
         <PostHeader post={post} navigation={navigation} deletePost={deletePost}/>
@@ -94,7 +88,6 @@ const PostHeader = ({deletePost, post, navigation}) => (
     <TouchableOpacity 
       style={{flexDirection: 'row', alignItems: 'center'}} 
       onPress={(() => {
-        // console.log(post.owner_uid)
         navigation.navigate('UserScreen', {
           user: post.owner_uid,
         })
@@ -152,9 +145,6 @@ const PostFooter = ({handleGoing, post, openCommentSheet, getPostDetails, naviga
 
       <TouchableOpacity 
         onPress={(() => {
-          // navigation.navigate('CommentScreen'
-          // // , {postId: item.id}
-          // );
           openCommentSheet(post.postID)
         })}>
 

@@ -6,7 +6,6 @@ import { Button } from 'react-native-elements'
 
 import { Formik } from 'formik'
 import * as Yup from 'yup'
-import { validate } from 'email-validator'
 import { auth, db, storage } from '../../firebase'
 import { addDoc, collection, doc, serverTimestamp, setDoc } from 'firebase/firestore'
 import { uploadBytes, ref, getDownloadURL, } from 'firebase/storage';
