@@ -1,48 +1,95 @@
-import {
-  View,
-  Text,
-  FlatList,
-  Button,
-  TextInput,
-  StyleSheet,
-} from 'react-native';
-import React, {useState, useEffect} from 'react';
-import {auth, db, storage} from '../../firebase';
-import {
-  collection,
-  collectionGroup,
-  getDocs,
-  orderBy,
-  query,
-} from '@firebase/firestore';
-import {Image} from 'react-native-elements';
+import React, {useEffect, useState} from 'react';
+import {View, Text, StyleSheet, Image} from 'react-native';
+import {TouchableOpacity} from 'react-native-gesture-handler';
+import {auth, db} from '../../firebase';
+import {collection, deleteDoc, doc, getDoc} from '@firebase/firestore';
 
-const Comment = ({postInfo, comment}) => {
-  const commentText = comment.comment;
-  const commentOwner = comment.user;
-  // const timeStamp = comment.createdAt.toDate().toDateString();
-  const timeStamp = comment.createdAt
-    ? comment.createdAt.toDate().toLocaleString('en-GB', {timeZone: 'UTC'})
+const Comment = ({comment, postInfo}) => {
+  const {comment: commentText, created_at} = comment;
+
+  const [ownerInfo, setOwnerInfo] = useState({});
+  const [loading, setLoading] = useState(true);
+
+  const formattedDate = created_at
+    ? new Date(created_at.toDate()).toLocaleString('en-GB', {timeZone: 'UTC'})
     : '';
-  const pfp = comment.profile_picture;
+
+  const deleteComment = async comment => {
+    if (
+      comment.owner_uid === auth.currentUser.uid ||
+      postInfo.owner_uid === auth.currentUser.uid
+    ) {
+      const commentCollectionRef = collection(
+        db,
+        'posts',
+        postInfo.post_id,
+        'comments',
+      );
+      const commentRef = doc(commentCollectionRef, comment.comment_id);
+
+      try {
+        await deleteDoc(commentRef);
+        console.log('Document Deleted Successfully');
+      } catch (error) {
+        console.error('Error Deleting: ', error);
+      }
+    } else {
+      console.log(
+        "Current user doesn't have permission to delete this comment.",
+      );
+    }
+  };
+
+  const getOwnerDetails = async () => {
+    try {
+      const docSnap = await getDoc(comment.owner_doc);
+      const ownerData = docSnap.data();
+
+      setOwnerInfo(ownerData);
+      setLoading(false);
+    } catch (error) {
+      console.error('Error fetching owner details: ', error);
+    }
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      await getOwnerDetails();
+    };
+
+    fetchData();
+  }, []);
 
   return (
     <View style={styles.container}>
-      <View
-        style={{
-          width: 30,
-          height: 30,
-          margin: 2,
-          marginTop: 2,
-        }}>
-        <Image source={{uri: pfp}} style={styles.pfp} />
+      <View style={styles.profileContainer}>
+        <TouchableOpacity onPress={() => deleteComment(comment)}>
+          {loading ? (
+            <View style={styles.placeholder} />
+          ) : (
+            <Image
+              source={{uri: ownerInfo.profile_picture}}
+              style={styles.pfp}
+            />
+          )}
+        </TouchableOpacity>
       </View>
       <View style={styles.commentContainer}>
-        <View>
-          <Text style={{color: '#1e91e8'}}>{commentOwner}</Text>
-          <Text style={{fontWeight: 'bold'}}>{commentText}</Text>
-          <Text>{timeStamp}</Text>
-        </View>
+        <TouchableOpacity onPress={() => console.log(ownerInfo)}>
+          {loading ? (
+            <View style={styles.placeholderText} />
+          ) : (
+            <Text style={styles.username}>{ownerInfo.username}</Text>
+          )}
+        </TouchableOpacity>
+        <Text style={styles.commentText}>{commentText}</Text>
+        <Text style={styles.timestamp}>
+          {!formattedDate ? (
+            <View style={styles.placeholderText} />
+          ) : (
+            formattedDate
+          )}
+        </Text>
       </View>
     </View>
   );
@@ -50,29 +97,58 @@ const Comment = ({postInfo, comment}) => {
 
 const styles = StyleSheet.create({
   container: {
-    // alignItems: 'center',
-    // justifyContent: '',
-    width: 'auto',
-    borderWidth: 2,
-    borderColor: 'lightgrey',
-    margin: 1,
     flexDirection: 'row',
+    alignItems: 'flex-start',
+    marginVertical: 8,
+  },
+
+  profileContainer: {
+    marginHorizontal: 5,
   },
 
   pfp: {
-    height: '100%',
-    width: '100%',
-    borderRadius: 100,
-    // borderColor: 'black',
-    // borderWidth: 1.5
+    height: 30,
+    width: 30,
+    borderRadius: 15,
   },
 
   commentContainer: {
-    // flex: 1,
-    // width: 'auto',
-    // borderWidth: 0,
-    borderColor: 'grey',
-    // margin: 1
+    flex: 1,
+    borderWidth: 1,
+    borderColor: 'lightgrey',
+    borderRadius: 8,
+    padding: 8,
+    marginRight: 5,
+  },
+
+  username: {
+    color: '#1e91e8',
+    fontWeight: 'bold',
+  },
+
+  commentText: {
+    marginTop: 4,
+    fontWeight: 'bold',
+  },
+
+  timestamp: {
+    color: 'grey',
+    fontSize: 12,
+    marginTop: 4,
+  },
+
+  placeholder: {
+    height: 30,
+    width: 30,
+    borderRadius: 15,
+    backgroundColor: 'lightgrey',
+  },
+
+  placeholderText: {
+    height: 16,
+    width: 100,
+    backgroundColor: 'lightgrey',
+    borderRadius: 8,
   },
 });
 

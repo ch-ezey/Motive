@@ -1,28 +1,29 @@
-import { View, StyleSheet, TouchableOpacity, useWindowDimensions } from 'react-native'
-import React from 'react'
-import { Image } from 'react-native-elements';
+import {
+  View,
+  StyleSheet,
+  TouchableOpacity,
+  useWindowDimensions,
+} from 'react-native';
+import React from 'react';
+import {Image} from 'react-native-elements';
 
 const ProfPosts = ({post}) => {
-
-  const size = (useWindowDimensions().width - 22)/3;
+  const size = (useWindowDimensions().width - 22) / 3;
 
   return (
     <TouchableOpacity>
-      <View
-        style={{ width: size, height: size, margin: 2 }}
-      >
-        <Image 
-          source={{ uri: post.imageUrl }}
-          style={{ height: '100%', width: '100%', resizeMode: 'cover' }}
+      <View style={{width: size, height: size, margin: 2}}>
+        <Image
+          source={{uri: post.image_url}}
+          style={{height: '100%', width: '100%', resizeMode: 'cover'}}
         />
       </View>
-      </TouchableOpacity>
-  )
-}
+    </TouchableOpacity>
+  );
+};
 
 const styles = StyleSheet.create({
-    
-  container: { 
+  container: {
     // justifyContent: 'space-around',
     // alignItems: 'center',
     // flexDirection: 'row',
@@ -33,8 +34,7 @@ const styles = StyleSheet.create({
     // borderColor: 'white',
     // borderWidth: 1,
     // borderRadius: 10
-    
   },
 });
 
-export default ProfPosts
+export default ProfPosts;

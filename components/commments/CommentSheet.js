@@ -43,15 +43,15 @@ const CommentSheet = ({
   );
 
   const onUpload = async comment => {
-    const postID = postInfo.postID;
+    const postID = postInfo.post_id;
     try {
+      const ownerDocRef = doc(db, 'users', auth.currentUser.uid);
+
       const commentInput = {
-        user: auth.currentUser.displayName,
-        profile_picture: auth.currentUser.photoURL,
         owner_uid: auth.currentUser.uid,
-        owner_email: auth.currentUser.email,
         comment: comment,
-        createdAt: serverTimestamp(),
+        created_at: serverTimestamp(),
+        owner_doc: ownerDocRef,
       };
 
       const commentRef = await addDoc(
@@ -59,11 +59,11 @@ const CommentSheet = ({
         commentInput,
       );
 
-      const commentID = commentRef.id;
+      const comment_id = commentRef.id;
 
       await setDoc(
-        doc(db, 'posts', postID, 'comments', commentID),
-        {commentID},
+        doc(db, 'posts', postID, 'comments', comment_id),
+        {comment_id},
         {merge: true},
       );
 
@@ -82,15 +82,12 @@ const CommentSheet = ({
       <Formik
         initialValues={{comment: ''}}
         onSubmit={async (values, formik) => {
-          // console.log('Before onUpload:', postInfo);
+          console.log('Before onUpload:', postInfo);
           await onUpload(values.comment).then(clearTextInput(formik));
         }}>
         {({handleBlur, handleChange, handleSubmit, values}) => (
           <>
-            <BottomSheetFooter
-              {...props}
-              // bottomInset={24}
-            >
+            <BottomSheetFooter {...props}>
               <Divider />
               <View style={styles.footerContainer}>
                 <BottomSheetTextInput
@@ -139,10 +136,12 @@ const CommentSheet = ({
         {comments ? (
           <>
             <BottomSheetFlatList
+              keyExtractor={item => item.id}
               data={comments}
+              extraData={postInfo}
               renderItem={({item}) => (
                 <>
-                  <Comment comment={item} />
+                  <Comment key={item.id} comment={item} postInfo={postInfo} />
                 </>
               )}
             />
@@ -159,6 +158,7 @@ const styles = StyleSheet.create({
   contentContainer: {
     flex: 1,
     backgroundColor: 'white',
+    paddingBottom: 60,
   },
 
   commentHeader: {

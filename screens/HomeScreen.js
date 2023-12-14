@@ -56,7 +56,7 @@ const HomeScreen = ({navigation}) => {
     const commentsCollection = collection(db, 'posts', postID, 'comments');
     const commentsQuery = query(
       commentsCollection,
-      orderBy('createdAt', 'desc'),
+      orderBy('created_at', 'desc'),
     );
 
     onSnapshot(commentsQuery, snap => {
