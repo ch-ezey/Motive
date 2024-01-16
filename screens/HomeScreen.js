@@ -12,7 +12,7 @@ import {
   query,
 } from '@firebase/firestore';
 import {db} from '../firebase';
-import CommentSheet from '../components/commments/CommentSheet';
+import CommentSheet from '../components/comments/CommentSheet';
 
 const HomeScreen = ({navigation}) => {
   const [postInfo, setPostInfo] = useState({});

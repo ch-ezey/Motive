@@ -11,7 +11,8 @@ const ProfPosts = ({post}) => {
   const size = (useWindowDimensions().width - 22) / 3;
 
   return (
-    <TouchableOpacity>
+    <TouchableOpacity
+      onPress={() => console.log(post.caption) + console.log(post.post_id)}>
       <View style={{width: size, height: size, margin: 2}}>
         <Image
           source={{uri: post.image_url}}

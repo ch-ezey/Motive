@@ -1,8 +1,6 @@
-import { View, Text, StyleSheet, TouchableOpacity, Image, KeyboardAvoidingView} from 'react-native'
-import React, { useState } from 'react'
-import { Divider } from 'react-native-elements'
-import { useIsFocused, useRoute } from '@react-navigation/native'
-import { auth } from '../../firebase'
+import {View, StyleSheet, TouchableOpacity, Image} from 'react-native';
+import React, {useState} from 'react';
+import {useRoute} from '@react-navigation/native';
 
 export const BottomTabIcons = [
   {
@@ -21,7 +19,7 @@ export const BottomTabIcons = [
     name: 'Events',
     active: require('../../assets/icons/listA.png'),
     inactive: require('../../assets/icons/list.png'),
-    screen: 'EventScreen'
+    screen: 'EventScreen',
   },
   {
     name: 'Profile',
@@ -30,55 +28,45 @@ export const BottomTabIcons = [
     screen: 'ProfileScreen',
     // pfp: auth.currentUser.photoURL ? auth.currentUser.photoURL : null
   },
-]
+];
 
 const BottomTabs = ({icons, navigation}) => {
-  const [activeTab, setActiveTab] = useState('Home')
+  const [activeTab, setActiveTab] = useState('Home');
 
   const Icon = ({icon}) => (
-    <TouchableOpacity 
-      onPress={(() => {
-          setActiveTab(icon.name);
-          navigation.navigate(icon.screen);
-      })}
-    >
-      <Image 
-        source={
-          (useRoute().name == icon.screen
-          ? icon.active 
-          : icon.inactive)
-        } 
+    <TouchableOpacity
+      onPress={() => {
+        setActiveTab(icon.name);
+        navigation.navigate(icon.screen);
+      }}>
+      <Image
+        source={useRoute().name == icon.screen ? icon.active : icon.inactive}
         style={[
           styles.icon,
-           icon.name == 'Profile' 
-           ? styles.profilePic() 
-           : null,
-        // activeTab == 'Profile' && icon.name == activeTab 
-        //   ? styles.profilePic(activeTab) 
-        //   : null,
-          ]}
-        />
+          icon.name == 'Profile' ? styles.profilePic() : null,
+          // activeTab == 'Profile' && icon.name == activeTab
+          //   ? styles.profilePic(activeTab)
+          //   : null,
+        ]}
+      />
     </TouchableOpacity>
-  )
+  );
   return (
-    <KeyboardAvoidingView behavior='height'>
     <View style={styles.wrapper}>
-      <Divider width={1} orientation={'horizontal'}/>
       <View style={styles.container}>
         {icons.map((icon, index) => (
-          <Icon key={index} icon={icon}/>
+          <Icon key={index} icon={icon} />
         ))}
       </View>
     </View>
-    </KeyboardAvoidingView>
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
   wrapper: {
     // position: 'absolute',
     width: '100%',
-    bottom: '0%',
+    bottom: 0,
     // zIndex: 999,
     backgroundColor: '#082032',
     // height: 0
@@ -97,11 +85,11 @@ const styles = StyleSheet.create({
   },
 
   // dynamic styling
-  profilePic: (activeTab = '' ) => ({
+  profilePic: (activeTab = '') => ({
     borderRadius: 50,
     borderWidth: activeTab == 'Profile' ? 2 : 0,
-    borderColor: '#fff'
-  })
-})
+    borderColor: '#fff',
+  }),
+});
 
-export default BottomTabs
+export default BottomTabs;

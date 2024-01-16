@@ -29,7 +29,7 @@ const CommentSheet = ({
     <Text style={styles.headerText}>Loading comments...</Text>
   );
 
-  const snapPoints = useMemo(() => ['25%', '50%', '75%', '100%'], []);
+  const snapPoints = useMemo(() => ['25%', '50%', '75%'], []);
 
   const renderBackdrop = useCallback(
     props => (
@@ -129,7 +129,7 @@ const CommentSheet = ({
       enablePanDownToClose={true}
       backdropComponent={renderBackdrop}
       keyboardBlurBehavior="restore"
-      android_keyboardInputMode="adjustResize"
+      keyboardBehavior="extend"
       footerComponent={renderFooter}>
       <View style={styles.contentContainer}>
         <Text style={styles.commentHeader}>COMMENTS</Text>

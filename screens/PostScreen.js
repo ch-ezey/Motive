@@ -1,4 +1,4 @@
-import {FlatList, ScrollView} from 'react-native';
+import {FlatList} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import Post from '../components/home/Post';
 import {db} from '../firebase';
@@ -10,10 +10,8 @@ const PostScreen = ({navigation, openCommentSheet, closeCommentSheet}) => {
   const postsRef = collectionGroup(db, 'posts');
   const orderPostsRef = query(postsRef, orderBy('created_at', 'desc'));
 
-  // Add a loading state variable
   const [loading, setLoading] = useState(true);
 
-  // In your useEffect
   useEffect(() => {
     const unsubscribe = onSnapshot(
       orderPostsRef,

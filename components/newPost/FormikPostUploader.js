@@ -2,15 +2,14 @@ import {
   View,
   Text,
   StyleSheet,
-  TouchableOpacity,
   Alert,
   Image,
+  TouchableOpacity,
 } from 'react-native';
-import {useState, useEffect} from 'react';
 import React from 'react';
 import {TextInput} from 'react-native-gesture-handler';
 import {Button} from 'react-native-elements';
-
+import {useImagePicker} from '../universal/useImagePicker';
 import {Formik} from 'formik';
 import * as Yup from 'yup';
 import {auth, db, storage} from '../../firebase';
@@ -22,63 +21,30 @@ import {
   setDoc,
 } from 'firebase/firestore';
 import {uploadBytes, ref, getDownloadURL} from 'firebase/storage';
-import {launchImageLibrary} from 'react-native-image-picker';
 
 const uploadPostSchema = Yup.object().shape({
-  caption: Yup.string().max(2200, 'Caption has reached the character limit'),
+  description: Yup.string().max(
+    2200,
+    'Decription has reached the character limit',
+  ),
+  title: Yup.string()
+    .max(2200, 'Decription has reached the character limit')
+    .required(),
 });
 
-const FormikPostUploader = ({image, navigation}) => {
-  const user = auth.currentUser;
-
-  const options = {
-    title: 'Pick An Image',
-    maxWidth: 800,
-    maxHeight: 600,
-    storageOptions: {
-      skipBackup: true,
-      path: 'images',
-    },
-  };
-
-  const [selectedImage, setSelectedImage] = useState();
-  const [selectedImageUrl, setSelectedImageUrl] = useState();
-
-  useEffect(() => {
-    if (image) {
-      console.log('useEffect ' + image);
-      setSelectedImage({uri: image});
-      setSelectedImageUrl(image);
-    }
-  }, [image]);
-
-  const pickImageHandler = () => {
-    launchImageLibrary(options, response => {
-      if (response.didCancel) {
-        console.log('User cancelled image picker');
-      } else if (response.error) {
-        console.log('ImagePicker Error: ', response.error);
-      } else {
-        const uri = response.assets[0].uri;
-        console.log('Images ' + uri);
-        setSelectedImage({uri: uri});
-        setSelectedImageUrl(uri);
-      }
-    });
-  };
+const FormikPostUploader = ({user, navigation}) => {
+  const {selectedImage, pickImage} = useImagePicker();
 
   const uploadImage = async user_uid => {
-    const uri = selectedImage.uri;
+    const uri = selectedImage;
     const filename = uri.substring(uri.lastIndexOf('/') + 1);
 
-    console.log('image: ' + selectedImage.uri);
+    console.log('image: ' + selectedImage);
     console.log('uri: ' + uri);
     console.log('filename: ' + filename);
     console.log(user.uid);
 
-    let imageUri = uri.replace('file://', '');
-
-    const postImageRef = ref(storage, user_uid + '/' + 'posts/' + filename); //where the post is stored
+    const postImageRef = ref(storage, user_uid + '/' + 'posts/' + filename);
 
     const img = await fetch(uri);
     const bytes = await img.blob();
@@ -95,22 +61,21 @@ const FormikPostUploader = ({image, navigation}) => {
     }
   };
 
-  const onUpload = async caption => {
+  const onUpload = async (title, description) => {
     try {
       const ownerDocRef = doc(db, 'users', auth.currentUser.uid);
 
       const postInput = {
-        file_name: selectedImage.uri.substring(
-          selectedImage.uri.lastIndexOf('/') + 1,
-        ),
+        file_name: selectedImage.substring(selectedImage.lastIndexOf('/') + 1),
         owner_uid: auth.currentUser.uid,
-        caption: caption,
+        description: description,
+        title: title,
         created_at: serverTimestamp(),
         users_going: [],
         owner_doc: ownerDocRef,
       };
 
-      if (!(selectedImageUrl == null)) {
+      if (!(selectedImage == null)) {
         const downloadUrl = await uploadImage(user.uid);
         postInput.image_url = downloadUrl;
       }
@@ -132,47 +97,73 @@ const FormikPostUploader = ({image, navigation}) => {
 
   return (
     <Formik
-      initialValues={{caption: ''}}
+      initialValues={{title: '', description: ''}}
       onSubmit={async values => {
-        await onUpload(values.caption).then(navigation.goBack());
+        await onUpload(values.title, values.description).then(
+          navigation.goBack(),
+        );
       }}
       validationSchema={uploadPostSchema}
       validateOnMount={true}>
-      {({handleBlur, handleChange, handleSubmit, values}) => (
+      {({handleBlur, handleChange, handleSubmit, values, isValid}) => (
         <>
           <View style={styles.container}>
             <View style={styles.imageContainer}>
-              {selectedImageUrl ? (
-                <Image source={{uri: selectedImageUrl}} style={styles.image} />
+              {selectedImage ? (
+                <TouchableOpacity onPress={pickImage}>
+                  <Image source={{uri: selectedImage}} style={styles.image} />
+                </TouchableOpacity>
               ) : (
-                <Text style={{color: 'white', textAlign: 'center'}}>
-                  No Image Selected
-                </Text>
+                <TouchableOpacity
+                  onPress={pickImage}
+                  style={{
+                    // borderRadius: 100,
+                    width: '100%',
+                    height: '100%',
+                    justifyContent: 'center',
+                  }}>
+                  <Text style={{color: 'white', textAlign: 'center'}}>
+                    Select An Image
+                  </Text>
+                </TouchableOpacity>
               )}
             </View>
-            <View style={styles.captionInput}>
+            <View style={{}}>
               <TextInput
-                placeholder="Write Your Caption..."
-                placeholderTextColor="white"
+                placeholder="Title..."
+                placeholderTextColor="grey"
                 multiline={true}
-                style={styles.captionInput}
-                onChangeText={handleChange('caption')}
-                onBlur={handleBlur('caption')}
-                value={values.caption}
+                style={[
+                  styles.titleInput,
+                  {
+                    borderColor:
+                      1 > values.title.length || values.title.length >= 3
+                        ? 'grey'
+                        : '#fa4437',
+                  },
+                ]}
+                onChangeText={handleChange('title')}
+                onBlur={handleBlur('title')}
+                value={values.title}
+              />
+              <TextInput
+                placeholder="Description..."
+                placeholderTextColor="grey"
+                multiline={true}
+                numberOfLines={6}
+                style={styles.descriptionInput}
+                onChangeText={handleChange('description')}
+                onBlur={handleBlur('description')}
+                value={values.description}
               />
             </View>
-          </View>
-          <View style={styles.buttonContainer}>
-            <View style={styles.pickImageButton}>
-              <Button title="Pick Image" onPress={pickImageHandler} />
+            <View style={styles.shareButton}>
+              <Button
+                title="Share"
+                onPress={handleSubmit}
+                disabled={!isValid || selectedImage == null}
+              />
             </View>
-          </View>
-          <View style={styles.shareButton}>
-            <Button
-              title="Share"
-              onPress={handleSubmit}
-              disabled={selectedImageUrl == null}
-            />
           </View>
         </>
       )}
@@ -182,38 +173,55 @@ const FormikPostUploader = ({image, navigation}) => {
 
 const styles = StyleSheet.create({
   container: {
-    margin: 20,
-    justifyContent: 'space-between',
-    flexDirection: 'row',
+    // flex: 1,
+    alignItems: 'center',
+    margin: 10,
+    // flexDirection: 'column',
+    // borderWidth: 1,
+    borderColor: 'white',
+    padding: 10,
+    justifyContent: 'center',
   },
   imageContainer: {
-    justifyContent: 'center',
+    // justifyContent: 'center',
     borderWidth: 1,
-    borderColor: 'white',
-    width: 150,
-    height: 150,
+    borderColor: 'grey',
+    width: 250,
+    height: 250,
+    marginBottom: 10,
   },
   image: {
     width: '100%',
     height: '100%',
+    resizeMode: 'contain',
   },
-  captionInput: {
-    flex: 1,
-    marginLeft: 12,
+
+  descriptionInput: {
     color: 'white',
     fontSize: 17,
+    borderWidth: 1,
+    borderColor: 'grey',
+    textAlignVertical: 'top',
+    width: 320,
+    marginVertical: 10,
+    paddingTop: 10,
+    paddingLeft: 10,
   },
-  buttonContainer: {
-    marginLeft: 20,
-    marginBottom: 10,
-    flexDirection: 'row',
+
+  titleInput: {
+    color: 'white',
+    fontSize: 17,
+    borderWidth: 1,
+    borderColor: 'grey',
+    width: 320,
+    marginVertical: 10,
+    paddingTop: 10,
+    paddingLeft: 10,
   },
-  pickImageButton: {
-    width: 150,
-    marginRight: 10,
-  },
+
   shareButton: {
-    marginHorizontal: 20,
+    marginVertical: 10,
+    width: 150,
   },
 });
 
