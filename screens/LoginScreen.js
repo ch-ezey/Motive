@@ -1,29 +1,63 @@
-import { View, Text, Image, StyleSheet, KeyboardAvoidingView } from 'react-native'
-import React from 'react'
-import LoginForm from '../components/login/LoginForm'
+import {
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  TouchableOpacity,
+  ImageBackground,
+} from 'react-native';
+import React from 'react';
+import LoginForm from '../components/login/LoginForm';
 
 const LoginScreen = ({navigation}) => (
-    // <KeyboardAvoidingView behavior='height' style={styles.container}>
+  <View style={styles.wrapper}>
     <View style={styles.container}>
-        <View style={styles.logoContainer}>
-            <Image style={{height: 100, width: 100, borderWidth: 10,}} source={require('../assets/logo/M.png')}/>
-        </View>
-        <LoginForm navigation={navigation}/>
+      <View style={styles.logoContainer}>
+        <Image
+          style={{height: 100, width: 100}}
+          source={require('../assets/logo/M.png')}
+          // style={{height: 120, width: 120}}
+          // source={require('../assets/logo/M-Shadow.png')}
+        />
+      </View>
+      <LoginForm navigation={navigation} />
     </View>
-    // </KeyboardAvoidingView>
-  )
+    <ImageBackground
+      source={require('../assets/logo/Ellipse.png')}
+      style={styles.ellipse}>
+      <Text style={{color: 'white'}}>Don't have an account? </Text>
+      <TouchableOpacity onPress={() => navigation.navigate('SignupScreen')}>
+        <Text style={{color: '#6BB0F5', fontWeight: 'bold'}}> Sign Up</Text>
+      </TouchableOpacity>
+    </ImageBackground>
+  </View>
+);
 
 const styles = StyleSheet.create({
-    container:{
-        flex: 1,
-        backgroundColor: '#082032',
-        paddingTop: 50,
-        paddingHorizontal: 12,
-    },
+  wrapper: {
+    flex: 1,
+    backgroundColor: '#082032',
+  },
+  container: {
+    flex: 1,
+    paddingTop: 50,
+    paddingHorizontal: 12,
+  },
+  logoContainer: {
+    alignItems: 'center',
+    marginTop: 60,
+  },
+  ellipse: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    height: 136,
+    justifyContent: 'center',
+    alignItems: 'center',
+    resizeMode: 'cover',
+    flexDirection: 'row',
+  },
+});
 
-    logoContainer:{
-        alignItems: 'center',
-        marginTop: 60
-    }
-})
-export default LoginScreen
+export default LoginScreen;

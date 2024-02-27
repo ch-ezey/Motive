@@ -1,7 +1,12 @@
 //components/Post/PostHeader.js
 import React, {useEffect, useState} from 'react';
-import {View, TouchableOpacity, Image, Dimensions} from 'react-native';
-import styles from './styles';
+import {
+  View,
+  TouchableOpacity,
+  Image,
+  Dimensions,
+  StyleSheet,
+} from 'react-native';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -107,5 +112,11 @@ const PostImage = ({post}) => {
     </View>
   );
 };
-// code for PostHeader goes here
+
+const styles = StyleSheet.create({
+  image: {
+    width: '100%',
+    height: '100%',
+  },
+});
 export default PostImage;

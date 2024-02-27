@@ -15,11 +15,11 @@ const handleSignout = async () => {
 
 const Header = ({navigation}) => {
   return (
-    <View style={styles.container}>
+    <View style={styles.wrapper}>
       <TouchableOpacity onPress={handleSignout}>
         <Image
           style={styles.logo}
-          source={require('../../assets/logo/Long.png')}></Image>
+          source={require('../../assets/logo/Long1.png')}></Image>
       </TouchableOpacity>
 
       <View style={styles.iconContainer}>
@@ -52,27 +52,28 @@ const Header = ({navigation}) => {
 
 const styles = StyleSheet.create({
   logo: {
-    width: 100,
-    height: 38,
-    resizeMode: 'contain',
+    width: 93,
+    height: 32,
+    // resizeMode: 'contain',
   },
-  container: {
+  wrapper: {
     justifyContent: 'space-between',
-    alignItems: 'center',
+    // alignItems: 'center',
     flexDirection: 'row',
-    margin: 5,
+    padding: 10,
+    // elevation: 1,
+    // borderRadius: 1,
+    // borderColor: 'white',
   },
   iconContainer: {
+    width: 80,
     flexDirection: 'row',
+    justifyContent: 'space-between',
   },
   icon: {
     tintColor: '#B93A21',
-    marginTop: 10,
-    margin: 6,
-    marginHorizontal: 10,
     width: 32,
     height: 32,
-    resizeMode: 'contain',
   },
   unreadBadge: {
     backgroundColor: 'white',

@@ -10,7 +10,6 @@ import EventScreen from './screens/EventScreen';
 import FriendScreen from './screens/FriendScreen';
 import LoginScreen from './screens/LoginScreen';
 import SignupScreen from './screens/SignupScreen';
-import CommentScreen from './screens/CommentScreen';
 import UserScreen from './screens/UserScreen';
 
 const screenOptions = {
@@ -31,7 +30,6 @@ export const SignedInStack = () => (
       <PostStack.Screen name="EventScreen" component={EventScreen} />
       <PostStack.Screen name="ProfileScreen" component={ProfileScreen} />
       <PostStack.Screen name="FriendScreen" component={FriendScreen} />
-      <PostStack.Screen name="CommentScreen" component={CommentScreen} />
       <PostStack.Screen name="UserScreen" component={UserScreen} />
     </PostStack.Navigator>
   </NavigationContainer>

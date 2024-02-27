@@ -1,5 +1,4 @@
-import {View, Text} from 'react-native';
-import styles from './post/styles';
+import {View, Text, StyleSheet} from 'react-native';
 import PostHeader from './post/PostHeader';
 import PostFooter from './post/PostFooter';
 import PostImage from './post/PostImage';
@@ -134,20 +133,22 @@ const Post = ({post, navigation, openCommentSheet, closeCommentSheet}) => {
           handleGoing={handleGoing}
           openCommentSheet={openCommentSheet}
         />
-        <View style={{marginLeft: 18}}>
-          <Going post={post} />
-        </View>
       </View>
     </View>
   );
 };
 
-const Going = ({post}) => (
-  <View style={{flexDirection: 'row'}}>
-    <Text style={{color: 'white', fontWeight: '600', marginTop: 3}}>
-      {post.users_going.length.toLocaleString('en')} going
-    </Text>
-  </View>
-);
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: '#213647',
+    borderRadius: 10,
+    marginHorizontal: 10,
+    marginVertical: 5,
+    overflow: 'hidden',
+    elevation: 5,
+    paddingBottom: 10,
+    backfaceVisibility: 'hidden',
+  },
+});
 
 export default Post;

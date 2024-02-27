@@ -1,6 +1,6 @@
 import React from 'react';
-import {View, TouchableOpacity, Image, Text} from 'react-native';
-import styles from './styles';
+import {View, TouchableOpacity, Image, Text, StyleSheet} from 'react-native';
+// import styles from './styles';
 
 const PostHeader = ({deletePost, post, navigation, ownerInfo, loading}) => (
   <View
@@ -48,5 +48,31 @@ const PostHeader = ({deletePost, post, navigation, ownerInfo, loading}) => (
     </TouchableOpacity>
   </View>
 );
-
+const styles = StyleSheet.create({
+  placeholderText: {
+    height: 16,
+    width: 100,
+    backgroundColor: 'grey',
+    borderRadius: 8,
+  },
+  // placeholder: {
+  //   height: 35,
+  //   width: 35,
+  //   borderRadius: 50,
+  //   backgroundColor: 'grey',
+  // },
+  icon: {
+    tintColor: '#B93A21',
+    width: 23,
+    height: 23,
+    margin: 5,
+    resizeMode: 'contain',
+  },
+  pfp: {
+    width: 35,
+    height: 35,
+    borderRadius: 50,
+    marginLeft: 6,
+  },
+});
 export default PostHeader;
