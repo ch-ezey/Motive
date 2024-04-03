@@ -34,13 +34,16 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   description: {
-    color: 'lightgrey',
+    color: '#a1a1a1', // Slightly lighter grey
     fontSize: 16,
+    lineHeight: 22, // Increased line height
     marginBottom: 10,
   },
   date: {
-    color: 'lightgrey',
-    fontSize: 14,
+    color: '#888', // Slightly darker grey
+    fontSize: 13,
+    fontStyle: 'italic',
+    marginTop: 5, // Adds some spacing
   },
 });
 

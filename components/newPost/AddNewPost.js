@@ -17,8 +17,9 @@ const AddNewPost = ({navigation}) => (
 
 const styles = StyleSheet.create({
   container: {
-    marginHorizontal: 7,
-    marginVertical: 10,
+    flex: 1,
+    // marginHorizontal: 7,
+    // marginVertical: 10,
   },
 });
 

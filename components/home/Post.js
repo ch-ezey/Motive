@@ -16,7 +16,7 @@ import {
 import {deleteObject, ref} from '@firebase/storage';
 import React, {useState, useEffect} from 'react';
 
-const Post = ({post, navigation, openCommentSheet, closeCommentSheet}) => {
+const Post = ({post, navigation, openCommentSheet}) => {
   const [ownerInfo, setOwnerInfo] = useState({});
   const [loading, setLoading] = useState(true);
 
@@ -126,7 +126,7 @@ const Post = ({post, navigation, openCommentSheet, closeCommentSheet}) => {
         loading={loading}
       />
       <PostImage post={post} />
-      <View style={{marginTop: 2}}>
+      <View style={{marginTop: 3}}>
         <PostFooter
           post={post}
           navigation={navigation}

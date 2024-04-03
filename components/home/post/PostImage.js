@@ -23,7 +23,7 @@ const PostImage = ({post}) => {
   const [isFullSize, setIsFullSize] = useState(false);
   const [isFaded, setIsFaded] = useState(false);
 
-  const screenWidth = Dimensions.get('window').width;
+  const screenWidth = Dimensions.get('window').width - 20;
 
   // Create animated styles using useAnimatedStyle hook
   const animatedStyles = useAnimatedStyle(() => {

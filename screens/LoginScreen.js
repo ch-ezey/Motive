@@ -16,8 +16,6 @@ const LoginScreen = ({navigation}) => (
         <Image
           style={{height: 100, width: 100}}
           source={require('../assets/logo/M.png')}
-          // style={{height: 120, width: 120}}
-          // source={require('../assets/logo/M-Shadow.png')}
         />
       </View>
       <LoginForm navigation={navigation} />
@@ -27,7 +25,7 @@ const LoginScreen = ({navigation}) => (
       style={styles.ellipse}>
       <Text style={{color: 'white'}}>Don't have an account? </Text>
       <TouchableOpacity onPress={() => navigation.navigate('SignupScreen')}>
-        <Text style={{color: '#6BB0F5', fontWeight: 'bold'}}> Sign Up</Text>
+        <Text style={{color: '#6BB0F5', fontWeight: 'bold'}}>Sign Up</Text>
       </TouchableOpacity>
     </ImageBackground>
   </View>
@@ -39,7 +37,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#082032',
   },
   container: {
-    flex: 1,
     paddingTop: 50,
     paddingHorizontal: 12,
   },
@@ -55,7 +52,7 @@ const styles = StyleSheet.create({
     height: 136,
     justifyContent: 'center',
     alignItems: 'center',
-    resizeMode: 'cover',
+    // resizeMode: 'cover',
     flexDirection: 'row',
   },
 });

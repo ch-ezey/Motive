@@ -14,6 +14,10 @@ import UserScreen from './screens/UserScreen';
 
 const screenOptions = {
   headerShown: false,
+  // cardShadowEnabled: false,
+  // cardStyle: {background: 'black'},
+  // animationEnabled: true,
+  // animation: 'flip',
 };
 
 const PostStack = createStackNavigator();
