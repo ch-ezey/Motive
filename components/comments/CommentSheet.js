@@ -93,7 +93,8 @@ const CommentSheet = ({
                 <BottomSheetTextInput
                   style={styles.input}
                   multiline={true}
-                  maxLength={200}
+                  // numberOfLines={3}
+                  maxLength={100}
                   placeholder="Add a comment..."
                   onChangeText={handleChange('comment')}
                   onBlur={handleBlur('comment')}
