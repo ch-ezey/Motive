@@ -5,10 +5,10 @@ import {
   Alert,
   Image,
   TouchableOpacity,
-  Pressable,
 } from 'react-native';
 import React from 'react';
 import {TextInput} from 'react-native-gesture-handler';
+import {Button} from 'react-native-elements';
 import {useImagePicker} from '../universal/useImagePicker';
 import {Formik} from 'formik';
 import * as Yup from 'yup';
@@ -32,9 +32,7 @@ const uploadPostSchema = Yup.object().shape({
     .required(),
 });
 
-const FormikPostUploader = ({navigation}) => {
-  const user = auth.currentUser;
-
+const FormikPostUploader = ({user, navigation}) => {
   const {selectedImage, pickImage} = useImagePicker();
 
   const uploadImage = async user_uid => {
@@ -111,134 +109,61 @@ const FormikPostUploader = ({navigation}) => {
         <>
           <View style={styles.container}>
             <View style={styles.imageContainer}>
-              <TouchableOpacity
-                onPress={pickImage}
-                style={{
-                  width: '100%',
-                  height: '100%',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}>
-                {selectedImage ? (
+              {selectedImage ? (
+                <TouchableOpacity onPress={pickImage}>
                   <Image source={{uri: selectedImage}} style={styles.image} />
-                ) : (
-                  <Image
-                    style={{
-                      tintColor: '#C3C9CD',
-                      height: 30,
-                      width: 30,
-                    }}
-                    source={require('../../assets/icons/upload.png')}
-                  />
-                )}
-              </TouchableOpacity>
+                </TouchableOpacity>
+              ) : (
+                <TouchableOpacity
+                  onPress={pickImage}
+                  style={{
+                    // borderRadius: 100,
+                    width: '100%',
+                    height: '100%',
+                    justifyContent: 'center',
+                  }}>
+                  <Text style={{color: 'white', textAlign: 'center'}}>
+                    Select An Image
+                  </Text>
+                </TouchableOpacity>
+              )}
             </View>
-            <View
-              style={[
-                styles.titleInput,
-                {
-                  borderColor:
-                    1 > values.title.length || values.title.length >= 5
-                      ? '#52636F'
-                      : '#fa4437',
-                },
-              ]}>
+            <View style={{}}>
               <TextInput
-                style={{color: 'white', fontSize: 16}}
                 placeholder="Title..."
-                placeholderTextColor="#CCCCCC"
+                placeholderTextColor="grey"
                 multiline={true}
+                style={[
+                  styles.titleInput,
+                  {
+                    borderColor:
+                      1 > values.title.length || values.title.length >= 3
+                        ? 'grey'
+                        : '#fa4437',
+                  },
+                ]}
                 onChangeText={handleChange('title')}
                 onBlur={handleBlur('title')}
                 value={values.title}
               />
-            </View>
-            <View style={[styles.descriptionInput]}>
               <TextInput
-                style={{textAlignVertical: 'top', color: 'white', fontSize: 16}}
                 placeholder="Description..."
-                placeholderTextColor="#CCCCCC"
+                placeholderTextColor="grey"
                 multiline={true}
-                numberOfLines={8}
+                numberOfLines={6}
+                style={styles.descriptionInput}
                 onChangeText={handleChange('description')}
                 onBlur={handleBlur('description')}
                 value={values.description}
               />
             </View>
-            <View
-              style={{
-                // marginBottom: 2,
-                flexDirection: 'row',
-                // justifyContent: 'space-between',
-              }}>
-              <View style={[styles.dropDown]}>
-                <TouchableOpacity
-                  style={{
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                  }}>
-                  <Text
-                    style={{
-                      color: '#CCCCCC',
-                      fontSize: 16,
-                      paddingVertical: 6,
-                    }}>
-                    Tags
-                  </Text>
-
-                  <View style={{paddingTop: 5}}>
-                    <Image
-                      style={{tintColor: '#CCCCCC', height: 25, width: 25}}
-                      source={require('../../assets/icons/downdrop-arrow.png')}
-                    />
-                  </View>
-                </TouchableOpacity>
-              </View>
-
-              <View style={[styles.calendar]}>
-                <TouchableOpacity style={{flexDirection: 'row'}}>
-                  <Text
-                    style={{
-                      color: '#CCCCCC',
-                      fontSize: 16,
-                      paddingVertical: 5,
-                    }}>
-                    23/10/2001
-                  </Text>
-                  <View
-                    style={{
-                      paddingLeft: 10,
-                      paddingVertical: 5,
-                    }}>
-                    <Image
-                      style={{tintColor: '#CCCCCC', height: 20, width: 20}}
-                      source={require('../../assets/icons/calendar.png')}
-                    />
-                  </View>
-                </TouchableOpacity>
-              </View>
+            <View style={styles.shareButton}>
+              <Button
+                title="Share"
+                onPress={handleSubmit}
+                disabled={!isValid || selectedImage == null}
+              />
             </View>
-            <Pressable
-              style={({pressed}) => [
-                styles.footerButton,
-                {
-                  backgroundColor: isValid ? '#238ddc' : '#cccccc',
-                  opacity: pressed ? 0.5 : 1,
-                },
-              ]}
-              onPress={handleSubmit}
-              disabled={!isValid}>
-              <Text
-                style={[
-                  styles.buttonText,
-                  {
-                    color: isValid ? 'white' : '#838383',
-                  },
-                ]}>
-                POST
-              </Text>
-            </Pressable>
           </View>
         </>
       )}
@@ -248,81 +173,55 @@ const FormikPostUploader = ({navigation}) => {
 
 const styles = StyleSheet.create({
   container: {
+    // flex: 1,
+    alignItems: 'center',
     margin: 10,
+    // flexDirection: 'column',
+    // borderWidth: 1,
     borderColor: 'white',
     padding: 10,
+    justifyContent: 'center',
   },
   imageContainer: {
-    backgroundColor: '#213647',
-    alignSelf: 'center',
-    borderRadius: 15,
-    // borderWidth: 1,
+    // justifyContent: 'center',
+    borderWidth: 1,
     borderColor: 'grey',
-    width: 202,
-    height: 260,
-    marginBottom: 20,
-    elevation: 3,
+    width: 250,
+    height: 250,
+    marginBottom: 10,
   },
   image: {
     width: '100%',
     height: '100%',
-    resizeMode: 'cover',
-    borderRadius: 15,
+    resizeMode: 'contain',
   },
 
   descriptionInput: {
-    borderRadius: 15,
-    paddingHorizontal: 11,
-    padding: 2,
-    backgroundColor: '#213647',
-    marginBottom: 10,
-    borderWidth: 2,
-    borderColor: '#52636F',
+    color: 'white',
+    fontSize: 17,
+    borderWidth: 1,
+    borderColor: 'grey',
+    textAlignVertical: 'top',
+    width: 320,
+    marginVertical: 10,
+    paddingTop: 10,
+    paddingLeft: 10,
   },
 
   titleInput: {
-    borderRadius: 15,
-    paddingHorizontal: 11,
-    padding: 2,
-    backgroundColor: '#213647',
-    marginBottom: 10,
-    borderWidth: 2,
-    borderColor: '#52636F',
-  },
-  dropDown: {
-    flex: 1,
-    borderRadius: 10,
-    paddingHorizontal: 11,
-    backgroundColor: '#213647',
-    marginBottom: 10,
-    borderWidth: 2,
-    borderColor: '#52636F',
-    marginRight: 10,
-  },
-  calendar: {
-    flexDirection: 'row',
-    borderRadius: 10,
-    paddingHorizontal: 11,
-    padding: 2,
-    backgroundColor: '#213647',
-    marginBottom: 10,
-    borderWidth: 2,
-    borderColor: '#52636F',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    color: 'white',
+    fontSize: 17,
+    borderWidth: 1,
+    borderColor: 'grey',
+    width: 320,
+    marginVertical: 10,
+    paddingTop: 10,
+    paddingLeft: 10,
   },
 
-  footerButton: {
-    padding: 10,
-    borderRadius: 6,
-    alignItems: 'center',
-    elevation: 10,
-  },
-
-  buttonText: {
-    fontSize: 14,
-    // fontFamily: 'Roboto-Black',
-    fontWeight: 'bold',
+  shareButton: {
+    marginVertical: 10,
+    width: 150,
   },
 });
 

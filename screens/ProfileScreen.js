@@ -94,9 +94,9 @@ const ProfileScreen = ({navigation}) => {
             data={posts}
             renderItem={({item}) => <ProfPosts post={item} />}
           />
+          <BottomTabs navigation={navigation} icons={BottomTabIcons} />
         </>
       )}
-      <BottomTabs navigation={navigation} icons={BottomTabIcons} />
     </SafeAreaView>
   );
 };

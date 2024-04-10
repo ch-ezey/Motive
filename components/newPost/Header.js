@@ -5,10 +5,9 @@ const Header = ({navigation}) => (
     <TouchableOpacity onPress={() => navigation.goBack()}>
       <Image
         style={{tintColor: 'white', height: 30, width: 30}}
-        source={require('../../assets/icons/back.png')}
-      />
+        source={require('../../assets/icons/back.png')}></Image>
     </TouchableOpacity>
-    <Text style={styles.headerText}>CREATE EVENT</Text>
+    <Text style={styles.headerText}>NEW MOTIVE</Text>
     <Text></Text>
   </View>
 );
@@ -18,15 +17,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingLeft: 10,
-    paddingVertical: 5,
   },
 
   headerText: {
     color: 'white',
     fontWeight: '700',
     fontSize: 25,
-    marginRight: 35,
+    marginRight: 25,
   },
 });
 export default Header;

@@ -5,10 +5,10 @@ import {
   TouchableOpacity,
   Alert,
   Image,
-  Pressable,
 } from 'react-native';
 import React from 'react';
 import {TextInput} from 'react-native-gesture-handler';
+import {Button} from 'react-native-elements';
 
 import {Formik} from 'formik';
 import * as Yup from 'yup';
@@ -19,7 +19,7 @@ import {createUserWithEmailAndPassword, updateProfile} from 'firebase/auth';
 import {uploadBytes, ref, getDownloadURL} from 'firebase/storage';
 import {useImagePicker} from '../universal/useImagePicker';
 
-const SignupForm = ({}) => {
+const SignupForm = ({navigation}) => {
   const {selectedImage, pickImage, removeImage} = useImagePicker();
 
   const uploadImage = async owner_uid => {
@@ -30,7 +30,8 @@ const SignupForm = ({}) => {
     console.log('uri: ' + uri);
     console.log('filename: ' + filename);
 
-    const pfpImageRef = ref(storage, owner_uid + '/' + 'pfp');
+    // const pfpImageRef = ref(storage, owner_uid + '/' + 'pfp/' + filename) //where the pfp is stored
+    const pfpImageRef = ref(storage, owner_uid + '/' + 'pfp'); //where the pfp is stored
 
     const metadata = {
       name: 'hello',
@@ -110,39 +111,34 @@ const SignupForm = ({}) => {
         validateOnMount={true}>
         {({handleChange, handleBlur, handleSubmit, values, isValid}) => (
           <>
-            <View style={styles.pfp}>
-              {selectedImage ? (
-                <TouchableOpacity onPress={removeImage}>
-                  <Image
-                    source={{uri: selectedImage}}
+            <View style={{borderWidth: 0, marginBottom: 10}}>
+              <View style={styles.pfp}>
+                {selectedImage ? (
+                  <TouchableOpacity onPress={removeImage}>
+                    <Image
+                      source={{uri: selectedImage}}
+                      style={{
+                        borderRadius: 100,
+                        width: '100%',
+                        height: '100%',
+                      }}
+                    />
+                  </TouchableOpacity>
+                ) : (
+                  <TouchableOpacity
+                    onPress={pickImage}
                     style={{
                       borderRadius: 100,
                       width: '100%',
                       height: '100%',
-                    }}
-                  />
-                </TouchableOpacity>
-              ) : (
-                <TouchableOpacity
-                  onPress={pickImage}
-                  style={{
-                    borderRadius: 100,
-                    width: '100%',
-                    height: '100%',
-                    justifyContent: 'center',
-                    backgroundColor: '#213647',
-                    alignItems: 'center',
-                  }}>
-                  <Image
-                    source={require('../../assets/icons/user.png')}
-                    style={{
-                      width: 100,
-                      height: 100,
-                      tintColor: '#C3C9CD',
-                    }}
-                  />
-                </TouchableOpacity>
-              )}
+                      justifyContent: 'center',
+                    }}>
+                    <Text style={{color: 'white', textAlign: 'center'}}>
+                      Select Profile Picture
+                    </Text>
+                  </TouchableOpacity>
+                )}
+              </View>
             </View>
             <View
               style={[
@@ -150,13 +146,13 @@ const SignupForm = ({}) => {
                 {
                   borderColor:
                     values.email.length < 1 || validate(values.email)
-                      ? '#52636F'
+                      ? '#ccc'
                       : '#fa4437',
                 },
               ]}>
               <TextInput
-                style={{color: 'white', fontSize: 16}}
-                placeholderTextColor="#CCCCCC"
+                style={{color: 'white', fontSize: 17}}
+                placeholderTextColor="grey"
                 placeholder="Enter Email"
                 autoCapitalize="none"
                 keyboardType="email-address"
@@ -174,13 +170,13 @@ const SignupForm = ({}) => {
                 {
                   borderColor:
                     1 > values.username.length || values.username.length >= 5
-                      ? '#52636F'
+                      ? '#ccc'
                       : '#fa4437',
                 },
               ]}>
               <TextInput
-                style={{color: 'white', fontSize: 16}}
-                placeholderTextColor="#CCCCCC"
+                style={{color: 'white', fontSize: 17}}
+                placeholderTextColor="grey"
                 placeholder="Create Username"
                 autoCapitalize="none"
                 autoCorrect={false}
@@ -197,13 +193,13 @@ const SignupForm = ({}) => {
                 {
                   borderColor:
                     1 > values.password.length || values.password.length >= 8
-                      ? '#52636F'
+                      ? '#ccc'
                       : '#fa4437',
                 },
               ]}>
               <TextInput
-                style={{color: 'white', fontSize: 16}}
-                placeholderTextColor="#CCCCCC"
+                style={{color: 'white', fontSize: 17}}
+                placeholderTextColor="grey"
                 placeholder="Create Password"
                 autoCapitalize="none"
                 autoCorrect={false}
@@ -215,66 +211,21 @@ const SignupForm = ({}) => {
               />
             </View>
             <View style={{alignItems: 'flex-end', marginBottom: 10}}></View>
-            <Pressable
-              style={({pressed}) => [
-                styles.footerButton,
-                {
-                  backgroundColor: isValid ? '#238ddc' : '#cccccc',
-                  opacity: pressed ? 0.5 : 1,
-                },
-              ]}
+            <Button
               onPress={handleSubmit}
-              disabled={!isValid}>
-              <Text
-                style={[
-                  styles.buttonText,
-                  {
-                    color: isValid ? 'white' : '#838383',
-                  },
-                ]}>
-                SIGN UP
-              </Text>
-            </Pressable>
+              title={'Sign Up'}
+              disabled={!isValid}
+            />
+            <View style={styles.signupContainer}>
+              <Text style={{color: 'white'}}>Already have an account? </Text>
+              <TouchableOpacity
+                onPress={() => navigation.navigate('LoginScreen')}>
+                <Text style={{color: '#6BB0F5'}}> Log In</Text>
+              </TouchableOpacity>
+            </View>
           </>
         )}
       </Formik>
-      <View>
-        <View
-          style={{
-            position: 'absolute',
-            alignSelf: 'center',
-            backgroundColor: '#082032',
-            paddingHorizontal: 8,
-            top: 15,
-            zIndex: 1,
-          }}>
-          <Text style={{color: 'white', fontWeight: 'bold', fontSize: 14.5}}>
-            OR
-          </Text>
-        </View>
-        <View
-          style={{
-            padding: 0.75,
-            backgroundColor: 'white',
-            marginTop: 25,
-            marginHorizontal: 20,
-          }}
-        />
-        <View style={styles.logoContainer}>
-          <TouchableOpacity style={{marginHorizontal: 60}}>
-            <Image
-              style={styles.logo}
-              source={require('../../assets/logo/google.png')}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity style={{marginHorizontal: 60}}>
-            <Image
-              style={styles.logo}
-              source={require('../../assets/logo/facebook.png')}
-            />
-          </TouchableOpacity>
-        </View>
-      </View>
     </View>
   );
 };
@@ -285,37 +236,35 @@ const styles = StyleSheet.create({
   },
 
   inputField: {
-    borderRadius: 15,
-    paddingHorizontal: 11,
-    padding: 2,
-    backgroundColor: '#213647',
+    borderRadius: 20,
+    padding: 1.5,
+    backgroundColor: '#082032',
     marginBottom: 10,
     borderWidth: 2,
-    borderColor: '#52636F',
+    borderColor: 'white',
   },
 
-  footerButton: {
-    padding: 10,
-    borderRadius: 6,
+  signupContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginTop: 20,
+  },
+
+  button: {
+    backgroundColor: '#0096F6',
     alignItems: 'center',
-    elevation: 10,
-  },
-
-  buttonText: {
-    fontSize: 14,
-    fontFamily: 'Roboto-Black',
-    fontWeight: 'bold',
+    justifyContent: 'center',
+    borderRadius: 4,
   },
 
   pfp: {
     alignSelf: 'center',
-    marginBottom: 20,
+    marginBottom: 10,
     borderRadius: 100,
-    borderWidth: 2,
-    borderColor: '#838383',
+    borderWidth: 1,
+    borderColor: 'white',
     width: 150,
     height: 150,
-    // elevation: 10,
   },
 
   pfpcancel: {
@@ -327,17 +276,6 @@ const styles = StyleSheet.create({
     height: 40,
     borderRadius: 50,
     marginRight: 100,
-  },
-
-  logoContainer: {
-    paddingVertical: 20,
-    flexDirection: 'row',
-    alignSelf: 'center',
-  },
-
-  logo: {
-    height: 50,
-    width: 50,
   },
 });
 export default SignupForm;

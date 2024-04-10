@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
-import {SafeAreaView, StatusBar, StyleSheet, View} from 'react-native';
+import {SafeAreaView, StyleSheet} from 'react-native';
 import Header from '../components/home/Header';
 import BottomTabs, {BottomTabIcons} from '../components/universal/BottomTabs';
 import PostScreen from './PostScreen';
@@ -69,11 +69,6 @@ const HomeScreen = ({navigation}) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar
-        // hidden
-        backgroundColor={'#082032'}
-        barStyle={'light-content'}
-      />
       <Header navigation={navigation} />
       <PostScreen
         navigation={navigation}

@@ -8,11 +8,11 @@ import {
 } from 'react-native';
 import React from 'react';
 import {TextInput} from 'react-native-gesture-handler';
-import {Image} from 'react-native-elements';
+import {Button, Image} from 'react-native-elements';
 
 import {Formik} from 'formik';
 import * as Yup from 'yup';
-import {validate} from 'email-validator';
+import {validate, Validator} from 'email-validator';
 
 import {auth} from '../../firebase';
 import {signInWithEmailAndPassword} from 'firebase/auth';
@@ -67,13 +67,13 @@ const LoginForm = ({navigation}) => {
                 {
                   borderColor:
                     values.email.length < 1 || validate(values.email)
-                      ? '#52636F'
+                      ? '#ccc'
                       : '#fa4437',
                 },
               ]}>
               <TextInput
                 style={{color: 'white', fontSize: 16}}
-                placeholderTextColor="#CCCCCC"
+                placeholderTextColor="#808080"
                 placeholder="Email"
                 autoCapitalize="none"
                 keyboardType="email-address"
@@ -91,13 +91,13 @@ const LoginForm = ({navigation}) => {
                 {
                   borderColor:
                     1 > values.password.length || values.password.length >= 8
-                      ? '#52636F'
+                      ? '#ccc'
                       : '#fa4437',
                 },
               ]}>
               <TextInput
                 style={{color: 'white', fontSize: 16}}
-                placeholderTextColor="#CCCCCC"
+                placeholderTextColor="#808080"
                 placeholder="Password"
                 autoCapitalize="none"
                 autoCorrect={false}
@@ -144,7 +144,12 @@ const LoginForm = ({navigation}) => {
           </>
         )}
       </Formik>
-      <View>
+      <View
+        style={{
+          //   borderWidth: 1,
+          borderColor: 'white',
+          height: 50,
+        }}>
         <View
           style={{
             position: 'absolute',
@@ -160,7 +165,7 @@ const LoginForm = ({navigation}) => {
         </View>
         <View
           style={{
-            padding: 0.75,
+            padding: 1,
             backgroundColor: 'white',
             marginTop: 25,
             marginHorizontal: 20,
@@ -196,10 +201,10 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     paddingHorizontal: 11,
     padding: 2,
-    backgroundColor: '#213647',
+    backgroundColor: '#082032',
     marginBottom: 10,
     borderWidth: 2,
-    borderColor: '#52636F',
+    borderColor: 'white',
   },
 
   footerButton: {
@@ -213,6 +218,14 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontFamily: 'Roboto-Black',
     fontWeight: 'bold',
+  },
+
+  signupContainer: {
+    position: 'absolute',
+    top: 365,
+    flexDirection: 'row',
+    alignSelf: 'center',
+    marginTop: 20,
   },
 
   logoContainer: {
