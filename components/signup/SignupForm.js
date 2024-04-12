@@ -7,7 +7,7 @@ import {
   Image,
   Pressable,
 } from 'react-native';
-import React from 'react';
+import React, {useState} from 'react';
 import {TextInput} from 'react-native-gesture-handler';
 
 import {Formik} from 'formik';
@@ -55,6 +55,7 @@ const SignupForm = ({}) => {
     username: Yup.string().min(5, 'A username is required').required(),
     password: Yup.string()
       .min(8, 'Your password has to have at least 8 characters')
+      .max(50, 'Your password has to have at most 50 characters')
       .required(),
   });
 
@@ -97,6 +98,20 @@ const SignupForm = ({}) => {
     } catch (error) {
       Alert.alert('This is awkward...', error.message);
     }
+  };
+
+  const [showPassword, setShowPassword] = useState(false);
+
+  const [isUsernameValid, setIsUsernameValid] = useState(false);
+
+  const toggleShowPassword = () => {
+    setShowPassword(!showPassword);
+    console.log(showPassword);
+  };
+
+  const toggleIsUsername = () => {
+    setIsUsernameValid(!isUsernameValid);
+    console.log(isUsernameValid);
   };
 
   return (
@@ -155,7 +170,7 @@ const SignupForm = ({}) => {
                 },
               ]}>
               <TextInput
-                style={{color: 'white', fontSize: 16}}
+                style={styles.input}
                 placeholderTextColor="#CCCCCC"
                 placeholder="Enter Email"
                 autoCapitalize="none"
@@ -179,7 +194,7 @@ const SignupForm = ({}) => {
                 },
               ]}>
               <TextInput
-                style={{color: 'white', fontSize: 16}}
+                style={styles.input}
                 placeholderTextColor="#CCCCCC"
                 placeholder="Create Username"
                 autoCapitalize="none"
@@ -189,6 +204,18 @@ const SignupForm = ({}) => {
                 onBlur={handleBlur('username')}
                 value={values.username}
               />
+
+              {isUsernameValid ? (
+                <Image
+                  style={[styles.icons, {tintColor: '#D39D34'}]}
+                  source={require('../../assets/icons/excla-circle.png')}
+                />
+              ) : (
+                <Image
+                  style={[styles.icons, {tintColor: '#D39D34'}]}
+                  source={require('../../assets/icons/excla-circle.png')}
+                />
+              )}
             </View>
 
             <View
@@ -202,17 +229,30 @@ const SignupForm = ({}) => {
                 },
               ]}>
               <TextInput
-                style={{color: 'white', fontSize: 16}}
+                style={styles.input}
                 placeholderTextColor="#CCCCCC"
                 placeholder="Create Password"
                 autoCapitalize="none"
                 autoCorrect={false}
-                secureTextEntry={true}
+                secureTextEntry={!showPassword}
                 textContentType="password"
                 onChangeText={handleChange('password')}
                 onBlur={handleBlur('passowrd')}
                 value={values.password}
               />
+              <TouchableOpacity onPress={toggleShowPassword}>
+                {showPassword ? (
+                  <Image
+                    style={styles.icons}
+                    source={require('../../assets/icons/eye.png')}
+                  />
+                ) : (
+                  <Image
+                    style={styles.icons}
+                    source={require('../../assets/icons/eye-cross.png')}
+                  />
+                )}
+              </TouchableOpacity>
             </View>
             <View style={{alignItems: 'flex-end', marginBottom: 10}}></View>
             <Pressable
@@ -285,25 +325,28 @@ const styles = StyleSheet.create({
   },
 
   inputField: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    borderWidth: 2,
     borderRadius: 15,
     paddingHorizontal: 11,
-    padding: 2,
-    backgroundColor: '#213647',
+    // padding: 2,
     marginBottom: 10,
-    borderWidth: 2,
+    backgroundColor: '#213647',
     borderColor: '#52636F',
   },
 
   footerButton: {
+    alignItems: 'center',
     padding: 10,
     borderRadius: 6,
-    alignItems: 'center',
     elevation: 10,
   },
 
   buttonText: {
     fontSize: 14,
-    fontFamily: 'Roboto-Black',
+    // fontFamily: 'Roboto-Black',
     fontWeight: 'bold',
   },
 
@@ -338,6 +381,16 @@ const styles = StyleSheet.create({
   logo: {
     height: 50,
     width: 50,
+  },
+
+  icons: {
+    height: 25,
+    width: 25,
+  },
+
+  input: {
+    color: 'white',
+    fontSize: 16,
   },
 });
 export default SignupForm;

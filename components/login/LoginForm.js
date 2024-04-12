@@ -6,7 +6,7 @@ import {
   Alert,
   Pressable,
 } from 'react-native';
-import React from 'react';
+import React, {useState} from 'react';
 import {TextInput} from 'react-native-gesture-handler';
 import {Image} from 'react-native-elements';
 
@@ -22,6 +22,7 @@ const LoginForm = ({navigation}) => {
     email: Yup.string().email().required('An email is required'),
     password: Yup.string()
       .min(8, 'Your password has to have at least 8 characters')
+      .max(50, 'Your password has to have at most 50 characters')
       .required(),
   });
 
@@ -50,6 +51,13 @@ const LoginForm = ({navigation}) => {
       });
   };
 
+  const [showPassword, setShowPassword] = useState(false);
+
+  const toggleShowPassword = () => {
+    setShowPassword(!showPassword);
+    console.log(showPassword);
+  };
+
   return (
     <View style={styles.wrapper}>
       <Formik
@@ -72,7 +80,7 @@ const LoginForm = ({navigation}) => {
                 },
               ]}>
               <TextInput
-                style={{color: 'white', fontSize: 16}}
+                style={styles.input}
                 placeholderTextColor="#CCCCCC"
                 placeholder="Email"
                 autoCapitalize="none"
@@ -96,17 +104,31 @@ const LoginForm = ({navigation}) => {
                 },
               ]}>
               <TextInput
-                style={{color: 'white', fontSize: 16}}
+                style={styles.input}
                 placeholderTextColor="#CCCCCC"
                 placeholder="Password"
                 autoCapitalize="none"
                 autoCorrect={false}
-                secureTextEntry={true}
+                secureTextEntry={!showPassword}
                 textContentType="password"
                 onChangeText={handleChange('password')}
                 onBlur={handleBlur('passowrd')}
                 value={values.password}
               />
+
+              <TouchableOpacity onPress={toggleShowPassword}>
+                {showPassword ? (
+                  <Image
+                    style={styles.icons}
+                    source={require('../../assets/icons/eye.png')}
+                  />
+                ) : (
+                  <Image
+                    style={styles.icons}
+                    source={require('../../assets/icons/eye-cross.png')}
+                  />
+                )}
+              </TouchableOpacity>
             </View>
             <View style={{alignItems: 'flex-end', marginBottom: 10}}>
               <TouchableOpacity>
@@ -193,12 +215,15 @@ const styles = StyleSheet.create({
   },
 
   inputField: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    borderWidth: 2,
     borderRadius: 15,
     paddingHorizontal: 11,
-    padding: 2,
-    backgroundColor: '#213647',
+    // padding: 2,
     marginBottom: 10,
-    borderWidth: 2,
+    backgroundColor: '#213647',
     borderColor: '#52636F',
   },
 
@@ -211,7 +236,7 @@ const styles = StyleSheet.create({
 
   buttonText: {
     fontSize: 14,
-    fontFamily: 'Roboto-Black',
+    // fontFamily: 'Roboto-Black',
     fontWeight: 'bold',
   },
 
@@ -224,6 +249,17 @@ const styles = StyleSheet.create({
   logo: {
     height: 50,
     width: 50,
+  },
+
+  icons: {
+    height: 25,
+    width: 25,
+  },
+
+  input: {
+    color: 'white',
+    fontSize: 16,
+    flex: 1,
   },
 });
 export default LoginForm;
