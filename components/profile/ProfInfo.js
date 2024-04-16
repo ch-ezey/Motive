@@ -7,14 +7,37 @@ const ProfInfo = ({userInfo}) => {
 
   return (
     <View style={styles.container}>
-      <View
-        style={{
-          width: 100,
-          height: 100,
-        }}>
-        <Image source={{uri: userInfo.profile_picture}} style={styles.pfp} />
+      <View style={{backgroundColor: '#213647', height: 170}}>
+        <View
+          style={{
+            width: 120,
+            height: 120,
+            // margin: 5,
+            top: 80,
+            borderRadius: 100,
+            backgroundColor: '#082032',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          <View
+            style={{
+              backgroundColor: '#082032',
+              width: 10,
+              height: 25,
+              position: 'absolute',
+              left: 0,
+              bottom: 30,
+            }}
+          />
+          <Image source={{uri: userInfo.profile_picture}} style={styles.pfp} />
+        </View>
       </View>
-
+      <View style={{marginTop: 30, margin: 10}}>
+        <Text style={{color: 'white', fontWeight: 900, fontSize: 30}}>
+          Cheta Ezenwoye
+        </Text>
+        <Text style={{color: '#86929B'}}>@naechebango</Text>
+      </View>
       <View style={styles.infoContainer}>
         <View style={styles.info}>
           {userInfo.postCount ? (
@@ -49,41 +72,33 @@ const ProfInfo = ({userInfo}) => {
 
 const styles = StyleSheet.create({
   container: {
-    justifyContent: 'space-around',
-    alignItems: 'center',
-    flexDirection: 'row',
-    margin: 5,
-    paddingVertical: 10,
-    paddingHorizontal: 5,
+    // alignItems: 'center',
+    flexDirection: 'column',
     borderColor: 'white',
-    // borderWidth: 1,
-    // borderRadius: 10
   },
 
   infoContainer: {
     flexDirection: 'row',
     borderColor: 'white',
-    // borderWidth: 1,
+    alignSelf: 'center',
   },
 
   info: {
     margin: 10,
     borderColor: 'white',
-    // borderWidth: 1,
   },
 
   infoText: {
     color: 'white',
-    fontWeight: '500',
+    // fontWeight: '500',
     textAlign: 'center',
   },
 
   pfp: {
-    height: '100%',
-    width: '100%',
+    height: 100,
+    width: 100,
     borderRadius: 100,
-    borderColor: 'white',
-    // borderWidth: 1.5
+    borderColor: '#082032',
   },
 });
 

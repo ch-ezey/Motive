@@ -254,7 +254,6 @@ const SignupForm = ({}) => {
                 )}
               </TouchableOpacity>
             </View>
-            <View style={{alignItems: 'flex-end', marginBottom: 10}}></View>
             <Pressable
               style={({pressed}) => [
                 styles.footerButton,
@@ -342,6 +341,7 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 6,
     elevation: 10,
+    marginTop: 5,
   },
 
   buttonText: {

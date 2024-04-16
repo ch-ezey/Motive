@@ -28,7 +28,7 @@ import ProfPosts from '../components/profile/ProfPosts';
 import ProfInfo from '../components/profile/ProfInfo';
 import {FlatList} from 'react-native-gesture-handler';
 
-const ProfileScreen = ({navigation}) => {
+const EditProfileScreen = ({navigation}) => {
   const [userInfo, setUserInfo] = useState(null);
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -205,4 +205,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ProfileScreen;
+export default EditProfileScreen;

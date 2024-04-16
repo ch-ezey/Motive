@@ -1,67 +1,56 @@
-import {Image, View, Text, StyleSheet, TouchableOpacity } from 'react-native'
-import React from 'react'
-import { auth, db } from '../../firebase'
-import { doc, getDoc } from '@firebase/firestore';
-
-const test = (userInfo) => {
-  try {
-    console.log(auth.currentUser.displayName)
-  } catch(error) {
-    console.log(error)
-  }
-}
+import {Image, View, Text, StyleSheet, TouchableOpacity} from 'react-native';
+import React from 'react';
+import {auth, db} from '../../firebase';
+import {doc, getDoc} from '@firebase/firestore';
 
 const ProfHeader = ({userInfo}) => {
-  
-  const username = userInfo.username;
-
   return (
-    <View style={styles.container}>
-      <TouchableOpacity 
-        onPress={test}
-        >
-    <Text style={styles.headerText}>{username}</Text>
-      </TouchableOpacity>
-
-      <View style={styles.iconContainer}>
-        <TouchableOpacity>
-          <Image style={styles.icon} 
-            source={require('../../assets/icons/menu.png')}></Image>
-        </TouchableOpacity>
+    <View style={styles.wrapper}>
+      <View style={styles.container}>
+        <View style={styles.iconContainer}>
+          <TouchableOpacity>
+            <Image
+              style={styles.icon}
+              source={require('../../assets/icons/settings.png')}
+            />
+          </TouchableOpacity>
+        </View>
       </View>
     </View>
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
-    
-    container: { 
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      flexDirection: 'row',
-      margin: 5,
-    },
+  wrapper: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+  },
 
-    iconContainer: {
-      flexDirection: 'row',
-    },
+  container: {
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    flexDirection: 'row',
+    margin: 5,
+  },
 
-    icon: {
-      tintColor: 'white',
-      marginTop: 0,
-      marginHorizontal: 10,
-      width: 32,
-      height: 32,
-      resizeMode: 'contain',
-    },
+  iconContainer: {
+    backgroundColor: '#082032',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 100,
+    width: 50,
+    height: 50,
+    elevation: 10,
+  },
 
-    headerText: {
-        color: 'white',
-        fontWeight: '700',
-        fontSize: 26,
-        marginLeft: 5,
-        textTransform: 'uppercase'
-      }
-  });
+  icon: {
+    tintColor: 'white',
+    marginTop: 0,
+    marginHorizontal: 10,
+    width: 28,
+    height: 28,
+  },
+});
 
-  export default ProfHeader
+export default ProfHeader;

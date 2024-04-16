@@ -33,7 +33,8 @@ const PostFooter = ({handleGoing, post, openCommentSheet}) => {
                   ? styles.footerIconActive
                   : styles.footerIcon
               }
-              source={require('../../../assets/icons/check.png')}></Image>
+              source={require('../../../assets/icons/check.png')}
+            />
           </TouchableOpacity>
           <Going post={post} />
         </View>
@@ -43,19 +44,22 @@ const PostFooter = ({handleGoing, post, openCommentSheet}) => {
           }}>
           <Image
             style={styles.footerIcon}
-            source={require('../../../assets/icons/comment.png')}></Image>
+            source={require('../../../assets/icons/comment.png')}
+          />
         </TouchableOpacity>
 
         <TouchableOpacity>
           <Image
             style={styles.footerIcon}
-            source={require('../../../assets/icons/share.png')}></Image>
+            source={require('../../../assets/icons/share.png')}
+          />
         </TouchableOpacity>
 
         <TouchableOpacity>
           <Image
             style={styles.footerIcon}
-            source={require('../../../assets/icons/cross.png')}></Image>
+            source={require('../../../assets/icons/cross.png')}
+          />
         </TouchableOpacity>
       </View>
     </View>

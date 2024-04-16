@@ -9,7 +9,7 @@ import {Image} from 'react-native-elements';
 
 const size = 115;
 
-const ProfPosts = ({post}) => {
+const ProfPostsList = ({post}) => {
   return (
     <TouchableOpacity
       onPress={() => console.log(post.caption) + console.log(post.post_id)}>
@@ -38,4 +38,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ProfPosts;
+export default ProfPostsList;

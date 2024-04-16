@@ -7,15 +7,23 @@ import {
 import React from 'react';
 import {Image} from 'react-native-elements';
 
-const ProfPosts = ({post}) => {
-  const size = (useWindowDimensions().width - 22) / 3;
+const size = 115;
 
+const UserPosts = ({post}) => {
   return (
-    <TouchableOpacity>
-      <View style={{width: size, height: size, margin: 2}}>
+    <TouchableOpacity
+      onPress={() => console.log(post.caption) + console.log(post.post_id)}>
+      <View style={styles.container}>
         <Image
           source={{uri: post.image_url}}
-          style={{height: '100%', width: '100%', resizeMode: 'cover'}}
+          style={{
+            height: '100%',
+            width: '100%',
+            resizeMode: 'cover',
+            borderWidth: 1,
+            borderColor: '#526370',
+            borderRadius: 6,
+          }}
         />
       </View>
     </TouchableOpacity>
@@ -24,17 +32,10 @@ const ProfPosts = ({post}) => {
 
 const styles = StyleSheet.create({
   container: {
-    // justifyContent: 'space-around',
-    // alignItems: 'center',
-    // flexDirection: 'row',
-    // margin: 5,
-    // height: "100%",
-    // paddingVertical: 10,
-    // paddingHorizontal: 5,
-    // borderColor: 'white',
-    // borderWidth: 1,
-    // borderRadius: 10
+    width: size,
+    height: size,
+    margin: 4,
   },
 });
 
-export default ProfPosts;
+export default UserPosts;
