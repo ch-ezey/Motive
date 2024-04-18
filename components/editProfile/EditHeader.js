@@ -13,29 +13,11 @@ const EditHeader = ({navigation, userInfo}) => {
           }}>
           <View style={styles.iconContainer}>
             <Image
-              style={styles.backIcon}
+              style={styles.icon}
               source={require('../../assets/icons/small-left.png')}
             />
           </View>
         </TouchableOpacity>
-        <View style={{flexDirection: 'row'}}>
-          <TouchableOpacity style={{paddingRight: 10}}>
-            <View style={styles.iconContainer}>
-              <Image
-                style={styles.icon}
-                source={require('../../assets/icons/bell.png')}
-              />
-            </View>
-          </TouchableOpacity>
-          <TouchableOpacity>
-            <View style={styles.iconContainer}>
-              <Image
-                style={styles.icon}
-                source={require('../../assets/icons/vert-settings.png')}
-              />
-            </View>
-          </TouchableOpacity>
-        </View>
       </View>
     </View>
   );
@@ -50,7 +32,6 @@ const styles = StyleSheet.create({
 
   container: {
     justifyContent: 'flex-start',
-    justifyContent: 'space-between',
     alignItems: 'center',
     flexDirection: 'row',
     margin: 5,
@@ -66,19 +47,11 @@ const styles = StyleSheet.create({
     elevation: 10,
   },
 
-  backIcon: {
+  icon: {
     tintColor: 'white',
     width: 30,
     height: 30,
     marginLeft: 6,
-  },
-
-  icon: {
-    tintColor: 'white',
-    width: 25,
-    height: 25,
-    alignSelf: 'center',
-    // marginLeft: 6,
   },
 });
 

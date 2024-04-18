@@ -36,7 +36,7 @@ const ProfInfo = ({userInfo}) => {
         <Text style={{color: 'white', fontWeight: 900, fontSize: 30}}>
           Cheta Ezenwoye
         </Text>
-        <Text style={{color: '#86929B'}}>@naechebango</Text>
+        <Text style={{color: '#86929B'}}>@{userInfo.username}</Text>
       </View>
       <View style={styles.infoContainer}>
         <View style={styles.info}>

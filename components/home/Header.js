@@ -19,7 +19,8 @@ const Header = ({navigation}) => {
         <TouchableOpacity onPress={handleSignout}>
           <Image
             style={styles.logo}
-            source={require('../../assets/logo/Long1.png')}></Image>
+            source={require('../../assets/logo/Long1.png')}
+          />
         </TouchableOpacity>
 
         <View style={styles.iconContainer}>
@@ -29,7 +30,8 @@ const Header = ({navigation}) => {
             }}>
             <Image
               style={styles.icon}
-              source={require('../../assets/icons/add.png')}></Image>
+              source={require('../../assets/icons/add.png')}
+            />
           </TouchableOpacity>
 
           <TouchableOpacity
@@ -38,7 +40,8 @@ const Header = ({navigation}) => {
             }}>
             <Image
               style={styles.icon}
-              source={require('../../assets/icons/friends.png')}></Image>
+              source={require('../../assets/icons/friends.png')}
+            />
           </TouchableOpacity>
         </View>
       </View>

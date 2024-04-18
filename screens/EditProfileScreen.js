@@ -11,8 +11,9 @@ import {
 } from 'react-native';
 import {BottomTabIcons} from '../components/universal/BottomTabs';
 import BottomTabs from '../components/universal/BottomTabs';
-import ProfHeader from '../components/profile/ProfHeader';
 import ProfPostsList from '../components/profile/ProfPostsList';
+import EditHeader from '../components/editProfile/EditHeader';
+import EditInfo from '../components/editProfile/EditInfo';
 import {
   collectionGroup,
   doc,
@@ -28,8 +29,8 @@ import ProfPosts from '../components/profile/ProfPosts';
 import ProfInfo from '../components/profile/ProfInfo';
 import {FlatList} from 'react-native-gesture-handler';
 
-const EditProfileScreen = ({navigation}) => {
-  const [userInfo, setUserInfo] = useState(null);
+const EditProfileScreen = ({route, navigation}) => {
+  const [userInfo, setUserInfo] = useState(route.params?.info);
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -80,65 +81,17 @@ const EditProfileScreen = ({navigation}) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      {loading ? (
-        // Placeholder while loading user info
-        <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color="white" />
-          <Text style={styles.loadingText}>Loading user data...</Text>
-        </View>
-      ) : (
-        <>
-          <ProfInfo userInfo={userInfo} />
-          <TouchableOpacity style={styles.footerButton}>
-            <Text style={styles.buttonText}>EDIT PROFILE</Text>
-          </TouchableOpacity>
-          <View
-            style={{
-              flexDirection: 'column',
-              // alignSelf: 'center',
-              alignItems: 'center',
-              marginVertical: 5,
-            }}>
-            <View style={styles.iconContainer}>
-              <TouchableOpacity onPress={() => setViewMode('grid')}>
-                <Image
-                  source={require('../assets/icons/grid.png')}
-                  style={[
-                    styles.icons,
-                    {tintColor: viewMode === 'grid' ? 'white' : '#888'},
-                  ]}
-                />
-              </TouchableOpacity>
-              <TouchableOpacity onPress={() => setViewMode('list')}>
-                <Image
-                  source={require('../assets/icons/list-check.png')}
-                  style={[
-                    styles.icons,
-                    {tintColor: viewMode === 'list' ? 'white' : '#888'},
-                  ]}
-                />
-              </TouchableOpacity>
-            </View>
-            <View style={styles.line} />
-          </View>
-          <FlatList
-            contentContainerStyle={styles.postContainer}
-            key={numColumns}
-            numColumns={numColumns}
-            data={posts}
-            renderItem={({item}) =>
-              viewMode === 'grid' ? (
-                <ProfPosts post={item} /> // Grid View
-              ) : (
-                <ProfPostsList post={item} /> // List View
-              )
-            }
-          />
-          <ProfHeader userInfo={userInfo} />
-        </>
-      )}
-
-      <BottomTabs navigation={navigation} icons={BottomTabIcons} />
+      <>
+        <EditInfo userInfo={userInfo} />
+        <View
+          style={{
+            flexDirection: 'column',
+            // alignSelf: 'center',
+            alignItems: 'center',
+            marginVertical: 5,
+          }}></View>
+        <EditHeader navigation={navigation} userInfo={userInfo} />
+      </>
     </SafeAreaView>
   );
 };

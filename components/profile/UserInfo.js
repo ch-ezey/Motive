@@ -1,4 +1,4 @@
-import {View, Text, StyleSheet} from 'react-native';
+import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import React from 'react';
 import {Image} from 'react-native-elements';
 
@@ -7,14 +7,48 @@ const ProfInfo = ({userInfo}) => {
 
   return (
     <View style={styles.container}>
-      <View
-        style={{
-          width: 100,
-          height: 100,
-        }}>
-        <Image source={{uri: userInfo.profile_picture}} style={styles.pfp} />
+      <View style={{backgroundColor: '#213647', height: 170}}>
+        <View
+          style={{
+            width: 120,
+            height: 120,
+            // margin: 5,
+            top: 80,
+            borderRadius: 100,
+            backgroundColor: '#082032',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          <View
+            style={{
+              backgroundColor: '#082032',
+              width: 10,
+              height: 25,
+              position: 'absolute',
+              left: 0,
+              bottom: 30,
+            }}
+          />
+          <Image source={{uri: userInfo.profile_picture}} style={styles.pfp} />
+        </View>
       </View>
 
+      <View style={{marginTop: 30, marginHorizontal: 10}}>
+        {userInfo.name == null ? null : (
+          <Text style={{color: 'white', fontWeight: 900, fontSize: 30}}>
+            {userInfo.name}
+          </Text>
+        )}
+        {/* <Text style={{color: 'white', fontWeight: 900, fontSize: 30}}>
+          Cheta Ezenwoye
+        </Text> */}
+        <Text style={{color: '#86929B'}}>@{userInfo.username}</Text>
+        {userInfo.bio == null ? null : (
+          <Text style={{color: 'white', fontWeight: 900, fontSize: 30}}>
+            {userInfo.bio}
+          </Text>
+        )}
+      </View>
       <View style={styles.infoContainer}>
         <View style={styles.info}>
           {userInfo.postCount ? (
@@ -49,43 +83,33 @@ const ProfInfo = ({userInfo}) => {
 
 const styles = StyleSheet.create({
   container: {
-    justifyContent: 'space-around',
-    alignItems: 'center',
-    flexDirection: 'row',
-    margin: 5,
-    paddingVertical: 10,
-    paddingHorizontal: 5,
+    // alignItems: 'center',
+    flexDirection: 'column',
     borderColor: 'white',
-    // borderWidth: 1,
-    // borderRadius: 10,
   },
 
   infoContainer: {
     flexDirection: 'row',
     borderColor: 'white',
-    // borderWidth: 1,
-    // borderRadius: 10,
+    alignSelf: 'center',
   },
 
   info: {
     margin: 10,
     borderColor: 'white',
-    // borderWidth: 1,
-    // borderRadius: 10,
   },
 
   infoText: {
     color: 'white',
-    fontWeight: '500',
+    fontWeight: '400',
     textAlign: 'center',
   },
 
   pfp: {
-    height: '100%',
-    width: '100%',
+    height: 100,
+    width: 100,
     borderRadius: 100,
-    borderColor: 'white',
-    // borderWidth: 1.5,
+    borderColor: '#082032',
   },
 });
 

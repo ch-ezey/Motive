@@ -3,18 +3,24 @@ import React from 'react';
 import {auth, db} from '../../firebase';
 import {doc, getDoc} from '@firebase/firestore';
 
-const ProfHeader = ({userInfo}) => {
+const ProfHeader = ({navigation, userInfo}) => {
   return (
     <View style={styles.wrapper}>
       <View style={styles.container}>
-        <View style={styles.iconContainer}>
-          <TouchableOpacity>
+        <TouchableOpacity
+        // onPress={() => {
+        //   navigation.navigate('EditProfileScreen', {
+        //     info: userInfo,
+        //   });
+        // }}
+        >
+          <View style={styles.iconContainer}>
             <Image
               style={styles.icon}
               source={require('../../assets/icons/settings.png')}
             />
-          </TouchableOpacity>
-        </View>
+          </View>
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -32,6 +38,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexDirection: 'row',
     margin: 5,
+    marginHorizontal: 8,
   },
 
   iconContainer: {
@@ -39,15 +46,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 100,
-    width: 50,
-    height: 50,
-    elevation: 10,
+    width: 45,
+    height: 45,
+    elevation: 5,
   },
 
   icon: {
     tintColor: 'white',
-    marginTop: 0,
-    marginHorizontal: 10,
     width: 28,
     height: 28,
   },

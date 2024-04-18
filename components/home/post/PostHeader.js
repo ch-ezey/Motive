@@ -1,5 +1,6 @@
 import React from 'react';
 import {View, TouchableOpacity, Image, Text, StyleSheet} from 'react-native';
+import {auth} from '../../../firebase';
 // import styles from './styles';
 
 const PostHeader = ({deletePost, post, navigation, ownerInfo, loading}) => (
@@ -16,9 +17,11 @@ const PostHeader = ({deletePost, post, navigation, ownerInfo, loading}) => (
       ) : (
         <TouchableOpacity
           onPress={() => {
-            navigation.navigate('UserScreen', {
-              info: ownerInfo,
-            });
+            if (post.owner_uid === auth.currentUser.uid) {
+              navigation.navigate('ProfileScreen');
+            } else {
+              navigation.navigate('UserScreen', {info: ownerInfo});
+            }
           }}>
           <Image source={{uri: ownerInfo.profile_picture}} style={styles.pfp} />
         </TouchableOpacity>
@@ -29,9 +32,11 @@ const PostHeader = ({deletePost, post, navigation, ownerInfo, loading}) => (
         ) : (
           <TouchableOpacity
             onPress={() => {
-              navigation.navigate('UserScreen', {
-                info: ownerInfo,
-              });
+              if (post.owner_uid === auth.currentUser.uid) {
+                navigation.navigate('ProfileScreen');
+              } else {
+                navigation.navigate('UserScreen', {info: ownerInfo});
+              }
             }}>
             <Text style={{color: 'white', fontWeight: '700'}}>
               {ownerInfo.username}

@@ -5,6 +5,8 @@ import {
   StyleSheet,
   SafeAreaView,
   ActivityIndicator,
+  TouchableOpacity,
+  Image,
 } from 'react-native';
 import UserHeader from '../components/profile/UserHeader';
 import {
@@ -63,6 +65,8 @@ const UserScreen = ({route, navigation}) => {
     return () => unsubscribe();
   }, []);
 
+  const [viewMode, setViewMode] = useState('grid'); // Initial view mode
+
   return (
     <SafeAreaView style={styles.container}>
       {loading ? (
@@ -73,16 +77,58 @@ const UserScreen = ({route, navigation}) => {
         </View>
       ) : (
         <>
-          <UserHeader navigation={navigation} userInfo={userInfo} />
           <UserInfo userInfo={userInfo} />
+          <View
+            style={{flexDirection: 'row', width: '80%', alignSelf: 'center'}}>
+            <TouchableOpacity
+              navigation={navigation}
+              style={styles.followButton}>
+              <Text style={styles.buttonText}>FOLLOW</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              navigation={navigation}
+              style={styles.messageButton}>
+              <Text style={styles.buttonText}>MESSAGE</Text>
+            </TouchableOpacity>
+          </View>
+          <View
+            style={{
+              flexDirection: 'column',
+              // alignSelf: 'center',
+              alignItems: 'center',
+              marginVertical: 5,
+            }}>
+            <View style={styles.iconContainer}>
+              <TouchableOpacity onPress={() => setViewMode('grid')}>
+                <Image
+                  source={require('../assets/icons/grid.png')}
+                  style={[
+                    styles.icons,
+                    {tintColor: viewMode === 'grid' ? 'white' : '#888'},
+                  ]}
+                />
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => setViewMode('list')}>
+                <Image
+                  source={require('../assets/icons/list-check.png')}
+                  style={[
+                    styles.icons,
+                    {tintColor: viewMode === 'list' ? 'white' : '#888'},
+                  ]}
+                />
+              </TouchableOpacity>
+            </View>
+            <View style={styles.line} />
+          </View>
           <FlatList
-            contentContainerStyle={{}}
-            style={styles.postContainer}
+            contentContainerStyle={styles.postContainer}
+            // style={styles.postContainer}
             key={numColumns}
             numColumns={numColumns}
             data={posts}
             renderItem={({item}) => <UserPosts post={item} />}
           />
+          <UserHeader navigation={navigation} userInfo={userInfo} />
         </>
       )}
     </SafeAreaView>
@@ -96,7 +142,12 @@ const styles = StyleSheet.create({
   },
 
   postContainer: {
-    margin: 5,
+    width: 369,
+    alignSelf: 'center',
+    // flex: 1,
+    // padding: 10,
+    // alignSelf: 'center',
+    // paddingHorizontal: 7.3,
   },
 
   loadingContainer: {
@@ -108,6 +159,54 @@ const styles = StyleSheet.create({
   loadingText: {
     marginTop: 10,
     color: 'white',
+  },
+
+  iconContainer: {
+    flexDirection: 'row',
+  },
+
+  icons: {
+    height: 24,
+    width: 24,
+    marginHorizontal: 30,
+  },
+
+  line: {
+    paddingVertical: 0.75,
+    backgroundColor: '#374957',
+    marginVertical: 8,
+    width: 200,
+  },
+
+  followButton: {
+    alignSelf: 'center',
+    alignItems: 'center',
+    backgroundColor: '#B93A21',
+    padding: 10,
+    borderRadius: 6,
+    elevation: 10,
+    marginBottom: 20,
+    flex: 1.5,
+    marginHorizontal: 10,
+  },
+
+  messageButton: {
+    alignSelf: 'center',
+    alignItems: 'center',
+    backgroundColor: '#374A59',
+    padding: 10,
+    borderRadius: 6,
+    elevation: 10,
+    marginBottom: 20,
+    flex: 1,
+    marginHorizontal: 10,
+  },
+
+  buttonText: {
+    fontSize: 14,
+    color: 'white',
+    // fontFamily: 'Roboto-Black',
+    fontWeight: 'bold',
   },
 });
 

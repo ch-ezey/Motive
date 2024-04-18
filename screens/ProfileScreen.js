@@ -89,7 +89,14 @@ const ProfileScreen = ({navigation}) => {
       ) : (
         <>
           <ProfInfo userInfo={userInfo} />
-          <TouchableOpacity style={styles.footerButton}>
+          <TouchableOpacity
+            navigation={navigation}
+            style={styles.editButton}
+            onPress={() => {
+              navigation.navigate('EditProfileScreen', {
+                info: userInfo,
+              });
+            }}>
             <Text style={styles.buttonText}>EDIT PROFILE</Text>
           </TouchableOpacity>
           <View
@@ -121,6 +128,7 @@ const ProfileScreen = ({navigation}) => {
             </View>
             <View style={styles.line} />
           </View>
+          {/* <View style={{alignSelf: 'center'}}> */}
           <FlatList
             contentContainerStyle={styles.postContainer}
             key={numColumns}
@@ -134,10 +142,10 @@ const ProfileScreen = ({navigation}) => {
               )
             }
           />
-          <ProfHeader userInfo={userInfo} />
+          {/* </View> */}
+          <ProfHeader navigation={navigation} userInfo={userInfo} />
         </>
       )}
-
       <BottomTabs navigation={navigation} icons={BottomTabIcons} />
     </SafeAreaView>
   );
@@ -150,10 +158,12 @@ const styles = StyleSheet.create({
   },
 
   postContainer: {
-    // margin: 5,
-    // borderWidth: 1,
-    borderColor: 'white',
-    alignItems: 'center',
+    width: 369,
+    alignSelf: 'center',
+    // flex: 1,
+    // padding: 10,
+    // alignSelf: 'center',
+    // paddingHorizontal: 7.3,
   },
 
   loadingContainer: {
@@ -184,7 +194,7 @@ const styles = StyleSheet.create({
     width: 200,
   },
 
-  footerButton: {
+  editButton: {
     alignSelf: 'center',
     alignItems: 'center',
     backgroundColor: '#374A59',
