@@ -52,7 +52,10 @@ const SignupForm = ({}) => {
 
   const SignupFormSchema = Yup.object().shape({
     email: Yup.string().email().required('An email is required'),
-    username: Yup.string().min(5, 'A username is required').required(),
+    username: Yup.string()
+      .min(5, 'A username is required')
+      .max(20, 'Username has reached character limit')
+      .required(),
     password: Yup.string()
       .min(8, 'Your password has to have at least 8 characters')
       .max(50, 'Your password has to have at most 50 characters')

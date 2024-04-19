@@ -14,6 +14,7 @@ import BottomTabs from '../components/universal/BottomTabs';
 import ProfPostsList from '../components/profile/ProfPostsList';
 import EditHeader from '../components/editProfile/EditHeader';
 import EditInfo from '../components/editProfile/EditInfo';
+import EditInputs from '../components/editProfile/EditInputs';
 import {
   collectionGroup,
   doc,
@@ -83,13 +84,7 @@ const EditProfileScreen = ({route, navigation}) => {
     <SafeAreaView style={styles.container}>
       <>
         <EditInfo userInfo={userInfo} />
-        <View
-          style={{
-            flexDirection: 'column',
-            // alignSelf: 'center',
-            alignItems: 'center',
-            marginVertical: 5,
-          }}></View>
+        <EditInputs userInfo={userInfo} />
         <EditHeader navigation={navigation} userInfo={userInfo} />
       </>
     </SafeAreaView>
