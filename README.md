@@ -1,16 +1,16 @@
 # Motive - Your Ultimate Student Social Platform
 
 ## Project Overview
-Welcome to the "Motive" GitHub repository—a showcase of my ongoing project developing a dynamic React Native mobile application aimed towards the vibrant student community. "Motive" is a social platform designed to help students discover and host exciting parties, university/society events, and connect with other students to help find friends to make these experiences unforgettable. This repository is a testament to my ability to create and maintain innovative software, with a focus on React Native and RESTful API integration.
+Welcome to the "Motive" GitHub repository—a showcase of my ongoing project developing a dynamic React Native mobile application aimed towards creating vibrant communities through event hosting/sharing. "Motive" is a social platform designed to help users discover and host exciting parties, events, and connect with other people to find friends to make these experiences unforgettable.
 
 ## Key Features
 "Motive" project offers a rich array of features:
 
-1. **Event Discovery:** Find the hottest parties, university events, and gatherings in your area with ease.
+1. **Event Discovery:** Find the hottest parties, events, and gatherings in your area with ease.
 
 2. **Event Hosting:** Host your own events and manage guest lists effortlessly.
 
-3. **Friend Connections:** Connect with friends and fellow students to enhance your social experience.
+3. **Friend Connections:** Connect with friends and fellow users to enhance your social experience.
 
 4. **Real-time Updates:** Thanks to Firebase, all changes and updates occur in real-time, ensuring a dynamic and responsive user experience.
 
