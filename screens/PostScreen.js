@@ -28,10 +28,10 @@ const PostScreen = ({navigation, openCommentSheet, closeCommentSheet}) => {
     return () => unsubscribe();
   }, []);
 
-  // // In your component rendering
-  // if (loading) {
-  //   return <ActivityIndicator size="large" color="#0000ff" />;
-  // }
+  // In your component rendering
+  if (loading) {
+    return <ActivityIndicator size="large" color="#0000ff" />;
+  }
 
   return (
     <FlatList

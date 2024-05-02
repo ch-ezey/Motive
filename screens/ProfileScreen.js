@@ -92,7 +92,9 @@ const ProfileScreen = ({navigation}) => {
             key={numColumns}
             numColumns={numColumns}
             data={posts}
-            renderItem={({item}) => <ProfPosts post={item} />}
+            renderItem={({item}) => (
+              <ProfPosts post={item} navigation={navigation} />
+            )}
           />
           <BottomTabs navigation={navigation} icons={BottomTabIcons} />
         </>

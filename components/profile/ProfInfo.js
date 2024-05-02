@@ -1,6 +1,8 @@
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import React from 'react';
 import {Image} from 'react-native-elements';
+import {Formik} from 'formik';
+import {Button} from 'react-native-elements';
 
 const ProfInfo = ({userInfo}) => {
   console.log(userInfo.postCount);

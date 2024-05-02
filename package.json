@@ -17,7 +17,7 @@
   "dependencies": {
     "@firebase/app": "^0.9.27",
     "@firebase/auth": "^1.6.0",
-    "@firebase/firestore": "^4.4.2",
+    "@firebase/firestore": "^4.6.1",
     "@firebase/storage": "^0.12.1",
     "@gorhom/bottom-sheet": "^4",
     "@react-native-async-storage/async-storage": "^1.22.2",
@@ -32,7 +32,7 @@
     "email-validator": "^2.0.4",
     "expo": "^50.0.7",
     "expo-updates": "~0.24.11",
-    "firebase": "^10.8.0",
+    "firebase": "^10.11.1",
     "formik": "^2.4.5",
     "install": "^0.13.0",
     "react": "18.2.0",

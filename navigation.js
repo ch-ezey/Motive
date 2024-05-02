@@ -11,6 +11,7 @@ import FriendScreen from './screens/FriendScreen';
 import LoginScreen from './screens/LoginScreen';
 import SignupScreen from './screens/SignupScreen';
 import UserScreen from './screens/UserScreen';
+import EditPostScreen from './screens/EditPostScreen';
 
 const screenOptions = {
   headerShown: false,
@@ -31,6 +32,7 @@ export const SignedInStack = () => (
       <PostStack.Screen name="ProfileScreen" component={ProfileScreen} />
       <PostStack.Screen name="FriendScreen" component={FriendScreen} />
       <PostStack.Screen name="UserScreen" component={UserScreen} />
+      <PostStack.Screen name="EditPostScreen" component={EditPostScreen} />
     </PostStack.Navigator>
   </NavigationContainer>
 );
