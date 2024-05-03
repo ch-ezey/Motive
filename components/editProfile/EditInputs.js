@@ -2,100 +2,67 @@ import {
   View,
   Text,
   StyleSheet,
+  TouchableOpacity,
   Alert,
   Image,
-  TouchableOpacity,
   Pressable,
+  ScrollView,
 } from 'react-native';
-import React from 'react';
+import React, {useState} from 'react';
 import {TextInput} from 'react-native-gesture-handler';
-import {useImagePicker} from '../universal/useImagePicker';
+
 import {Formik} from 'formik';
 import * as Yup from 'yup';
+import {validate} from 'email-validator';
 import {auth, db, storage} from '../../firebase';
-import {
-  addDoc,
-  collection,
-  doc,
-  serverTimestamp,
-  setDoc,
-} from 'firebase/firestore';
-import {uploadBytes, ref, getDownloadURL} from 'firebase/storage';
+import {doc, setDoc, updateDoc} from 'firebase/firestore';
+import {createUserWithEmailAndPassword, updateProfile} from 'firebase/auth';
 
-const uploadPostSchema = Yup.object().shape({
-  description: Yup.string().max(
-    2200,
-    'Decription has reached the character limit',
-  ),
-  username: Yup.string()
-    .min(5, 'A username is required')
-    .max(20, 'Username has reached character limit')
-    .required(),
-  title: Yup.string()
-    .max(2200, 'Decription has reached the character limit')
-    .required(),
+const EditInputs = ({navigation, userInfo}) => {
+  const phoneRegExp =
+    /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
 
-  name: Yup.string().max(20, 'Decription has reached the character limit'),
-});
+  const SignupFormSchema = Yup.object().shape({
+    name: Yup.string()
+      .min(1, 'A username is required')
+      .max(20, 'Username has reached character limit'),
+    username: Yup.string()
+      .min(5, 'A username is required')
+      .max(20, 'Username has reached character limit')
+      .required(),
+    bio: Yup.string().max(200, 'Username has reached character limit'),
+    email: Yup.string().email().required('An email is required'),
+    number: Yup.string()
+      //   .required('required')
+      .matches(phoneRegExp, 'Phone number is not valid')
+      .min(10, 'too short')
+      .max(10, 'too long'),
+    //   .nullable(),
+  });
 
-const FormikPostUploader = ({navigation}) => {
-  const user = auth.currentUser;
-
-  const {selectedImage, pickImage} = useImagePicker();
-
-  const uploadImage = async user_uid => {
-    const uri = selectedImage;
-    const filename = uri.substring(uri.lastIndexOf('/') + 1);
-
-    console.log('image: ' + selectedImage);
-    console.log('uri: ' + uri);
-    console.log('filename: ' + filename);
-    console.log(user.uid);
-
-    const postImageRef = ref(storage, user_uid + '/' + 'posts/' + filename);
-
-    const img = await fetch(uri);
-    const bytes = await img.blob();
-
-    console.log();
-
+  const onUpdate = async (name, username, bio, email, number) => {
     try {
-      await uploadBytes(postImageRef, bytes);
-      const downloadUrl = await getDownloadURL(postImageRef);
-      console.log('Download Url :: ' + downloadUrl);
-      return downloadUrl;
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const onUpload = async (title, description) => {
-    try {
-      const ownerDocRef = doc(db, 'users', auth.currentUser.uid);
-
-      const postInput = {
-        file_name: selectedImage.substring(selectedImage.lastIndexOf('/') + 1),
-        owner_uid: auth.currentUser.uid,
-        description: description,
-        title: title,
-        created_at: serverTimestamp(),
-        users_going: [],
-        owner_doc: ownerDocRef,
+      const userInput = {
+        name: name,
+        username: username,
+        email: email,
+        bio: bio,
+        number: number,
       };
 
-      if (!(selectedImage == null)) {
-        const downloadUrl = await uploadImage(user.uid);
-        postInput.image_url = downloadUrl;
-      }
+      await updateDoc(doc(db, 'users', auth.currentUser.uid), userInput).catch(
+        error => {
+          console.log(error.message);
+        },
+      );
 
-      // Upload the post without "postID" for now
-      const postRef = await addDoc(collection(db, 'posts'), postInput);
+      updateProfile(auth.currentUser, {
+        displayName: username,
+      }).catch(error => {
+        Alert.alert('This is awkward...', error.message);
+      });
 
-      // Retrieve the generated document ID
-      const post_id = postRef.id;
-
-      // Update the post document with "postID"
-      await setDoc(doc(db, 'posts', post_id), {post_id}, {merge: true});
+      console.log(userInput);
 
       console.log('Data Submitted');
     } catch (error) {
@@ -103,103 +70,279 @@ const FormikPostUploader = ({navigation}) => {
     }
   };
 
-  return (
-    <Formik
-      initialValues={{title: '', description: ''}}
-      onSubmit={async values => {
-        await onUpload(values.title, values.description).then(
-          navigation.goBack(),
-        );
-      }}
-      validationSchema={uploadPostSchema}
-      validateOnMount={true}>
-      {({handleBlur, handleChange, handleSubmit, values, isValid}) => (
-        <>
-          <View style={styles.container}>
-            <View
-              style={[
-                styles.titleInput,
-                {
-                  borderColor:
-                    1 > values.title.length || values.title.length >= 5
-                      ? '#52636F'
-                      : '#fa4437',
-                },
-              ]}>
-              <TextInput
-                style={{color: 'white', fontSize: 16}}
-                placeholder="Title..."
-                placeholderTextColor="#CCCCCC"
-                multiline={true}
-                onChangeText={handleChange('title')}
-                onBlur={handleBlur('title')}
-                value={values.title}
-              />
-            </View>
-            <View style={[styles.descriptionInput]}>
-              <TextInput
-                style={{textAlignVertical: 'top', color: 'white', fontSize: 16}}
-                placeholder="Description..."
-                placeholderTextColor="#CCCCCC"
-                multiline={true}
-                numberOfLines={8}
-                onChangeText={handleChange('description')}
-                onBlur={handleBlur('description')}
-                value={values.description}
-              />
-            </View>
-            <View
-              style={{
-                // marginBottom: 2,
-                flexDirection: 'row',
-                // justifyContent: 'space-between',
-              }}>
-              <View style={[styles.dropDown]}>
-                <TouchableOpacity
-                  style={{
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                  }}>
-                  <Text
-                    style={{
-                      color: '#CCCCCC',
-                      fontSize: 16,
-                      paddingVertical: 6,
-                    }}>
-                    Tags
-                  </Text>
+  const [isUsernameValid, setIsUsernameValid] = useState(false);
 
-                  <View style={{paddingTop: 5}}>
-                    <Image
-                      style={{tintColor: '#CCCCCC', height: 25, width: 25}}
-                      source={require('../../assets/icons/downdrop-arrow.png')}
-                    />
-                  </View>
-                </TouchableOpacity>
+  const toggleIsUsername = () => {
+    setIsUsernameValid(!isUsernameValid);
+    console.log(isUsernameValid);
+  };
+
+  return (
+    <ScrollView style={styles.wrapper}>
+      <Formik
+        initialValues={{
+          name: userInfo.name,
+          username: userInfo.username,
+          bio: userInfo.bio,
+          email: userInfo.email,
+          number: userInfo.number,
+        }}
+        onSubmit={async values => {
+          await onUpdate(
+            values.name,
+            values.username,
+            values.bio,
+            values.email,
+            values.number,
+          ).then(navigation.goBack());
+        }}
+        validationSchema={SignupFormSchema}
+        validateOnMount={false}>
+        {({handleChange, handleBlur, handleSubmit, values, isValid}) => (
+          <>
+            <View>
+              <View style={styles.inputContainer}>
+                <Text
+                  style={{
+                    color: '#CCCCCC',
+                    marginHorizontal: 18,
+                    // marginVertical: 5,
+                  }}>
+                  Name
+                </Text>
+                <View
+                  style={[
+                    styles.inputField,
+                    {
+                      borderColor:
+                        1 > values.name.length || values.name.length >= 5
+                          ? '#52636F'
+                          : '#fa4437',
+                    },
+                  ]}>
+                  <TextInput
+                    style={styles.input}
+                    placeholderTextColor="#ACAFB0"
+                    placeholder="Name"
+                    autoCapitalize="none"
+                    autoCorrect={false}
+                    textContentType="name"
+                    onChangeText={handleChange('name')}
+                    onBlur={handleBlur('name')}
+                    value={values.name}
+                  />
+                </View>
+
+                {/* {isUsernameValid ? (
+                <Image
+                  style={[styles.icons, {tintColor: '#D39D34'}]}
+                  source={require('../../assets/icons/excla-circle.png')}
+                />
+              ) : (
+                <Image
+                  style={[styles.icons, {tintColor: '#D39D34'}]}
+                  source={require('../../assets/icons/excla-circle.png')}
+                />
+              )} */}
               </View>
 
-              <View style={[styles.calendar]}>
-                <TouchableOpacity style={{flexDirection: 'row'}}>
+              <View style={styles.inputContainer}>
+                <View style={{flexDirection: 'row'}}>
                   <Text
                     style={{
                       color: '#CCCCCC',
-                      fontSize: 16,
-                      paddingVertical: 5,
+                      marginLeft: 18,
+                      // marginVertical: 5,
                     }}>
-                    23/10/2001
+                    Username
                   </Text>
-                  <View
+                  <Text
                     style={{
-                      paddingLeft: 10,
-                      paddingVertical: 5,
+                      color: '#B93A21',
+                      marginHorizontal: 3,
+                      // marginVertical: 5,
                     }}>
-                    <Image
-                      style={{tintColor: '#CCCCCC', height: 20, width: 20}}
-                      source={require('../../assets/icons/calendar.png')}
-                    />
-                  </View>
-                </TouchableOpacity>
+                    *
+                  </Text>
+                </View>
+                <View
+                  style={[
+                    styles.inputField,
+                    {
+                      borderColor:
+                        1 > values.username.length ||
+                        values.username.length >= 5
+                          ? '#52636F'
+                          : '#fa4437',
+                    },
+                  ]}>
+                  <TextInput
+                    style={styles.input}
+                    placeholderTextColor="#ACAFB0"
+                    placeholder="Username"
+                    autoCapitalize="none"
+                    autoCorrect={false}
+                    textContentType="username"
+                    onChangeText={handleChange('username')}
+                    onBlur={handleBlur('username')}
+                    value={values.username.trim()}
+                  />
+                </View>
+                <Text
+                  style={{
+                    color: '#55646F',
+                    marginHorizontal: 18,
+                    fontSize: 12,
+                    // marginVertical: 5,
+                  }}>
+                  You can only change your username once every 7 days.
+                </Text>
+              </View>
+
+              <View style={styles.inputContainer}>
+                <Text
+                  style={{
+                    color: '#CCCCCC',
+                    marginHorizontal: 18,
+                    // marginVertical: 5,
+                  }}>
+                  Bio
+                </Text>
+                <View
+                  style={[
+                    styles.inputField,
+                    {
+                      borderColor:
+                        1 > values.bio.length || values.bio.length <= 200
+                          ? '#52636F'
+                          : '#fa4437',
+                      // height: 100,
+                    },
+                  ]}>
+                  <TextInput
+                    style={[styles.input, {textAlignVertical: 'top'}]}
+                    placeholderTextColor="#ACAFB0"
+                    placeholder="Bio"
+                    autoCapitalize="none"
+                    autoCorrect={true}
+                    textContentType="none"
+                    onChangeText={handleChange('bio')}
+                    onBlur={handleBlur('bio')}
+                    value={values.bio}
+                    multiline={true}
+                    numberOfLines={5}
+                    maxLength={200}
+                  />
+                </View>
+                <Text
+                  style={{
+                    color: '#55646F',
+                    marginHorizontal: 18,
+                    fontSize: 12,
+                    // marginVertical: 5,
+                  }}>
+                  Brief description of your profile. URLs are hyperlinked.
+                </Text>
+              </View>
+
+              <View style={styles.inputContainer}>
+                <View style={{flexDirection: 'row'}}>
+                  <Text
+                    style={{
+                      color: '#CCCCCC',
+                      marginLeft: 18,
+                      // marginVertical: 5,
+                    }}>
+                    Email Address
+                  </Text>
+                  <Text
+                    style={{
+                      color: '#B93A21',
+                      marginHorizontal: 3,
+                      // marginVertical: 5,
+                    }}>
+                    *
+                  </Text>
+                </View>
+                <View
+                  style={[
+                    styles.inputField,
+                    {
+                      borderColor:
+                        values.email.length < 1 || validate(values.email)
+                          ? '#52636F'
+                          : '#fa4437',
+                    },
+                  ]}>
+                  <TextInput
+                    style={styles.input}
+                    placeholderTextColor="#ACAFB0"
+                    placeholder="Email"
+                    autoCapitalize="none"
+                    keyboardType="email-address"
+                    textContentType="emailAddress"
+                    autoFocus={false}
+                    onChangeText={handleChange('email')}
+                    onBlur={handleBlur('email')}
+                    value={values.email}
+                  />
+                  <TouchableOpacity
+                    style={{
+                      alignSelf: 'center',
+                      // justifyContent: 'center',
+                      backgroundColor: '#5034FF',
+                      paddingHorizontal: 15,
+                      paddingVertical: 7,
+                      borderRadius: 20,
+                    }}>
+                    <Text style={{color: 'white'}}>Verify</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+
+              <View style={styles.inputContainer}>
+                <Text
+                  style={{
+                    color: '#CCCCCC',
+                    marginHorizontal: 18,
+                    // marginVertical: 5,
+                  }}>
+                  Phone Number
+                </Text>
+                <View
+                  style={[
+                    styles.inputField,
+                    {
+                      borderColor:
+                        values.number.length < 1 || validate(values.number)
+                          ? '#52636F'
+                          : '#fa4437',
+                    },
+                  ]}>
+                  <TextInput
+                    style={styles.input}
+                    placeholderTextColor="#ACAFB0"
+                    placeholder="Phone Number"
+                    autoCapitalize="none"
+                    autoCorrect={false}
+                    keyboardType="phone-pad"
+                    textContentType="telephoneNumber"
+                    onChangeText={handleChange('number')}
+                    onBlur={handleBlur('number')}
+                    value={values.number}
+                  />
+                  <TouchableOpacity
+                    style={{
+                      alignSelf: 'center',
+                      // justifyContent: 'center',
+                      backgroundColor: '#5034FF',
+                      paddingHorizontal: 15,
+                      paddingVertical: 7,
+                      borderRadius: 20,
+                    }}>
+                    <Text style={{color: 'white'}}>Verify</Text>
+                  </TouchableOpacity>
+                </View>
               </View>
             </View>
             <Pressable
@@ -219,87 +362,43 @@ const FormikPostUploader = ({navigation}) => {
                     color: isValid ? 'white' : '#838383',
                   },
                 ]}>
-                POST
+                SAVE
               </Text>
             </Pressable>
-          </View>
-        </>
-      )}
-    </Formik>
+          </>
+        )}
+      </Formik>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    margin: 10,
-    borderColor: 'white',
-    padding: 10,
-  },
-  imageContainer: {
-    backgroundColor: '#213647',
-    alignSelf: 'center',
-    borderRadius: 15,
-    // borderWidth: 1,
-    borderColor: 'grey',
-    width: 202,
-    height: 260,
-    marginBottom: 20,
-    elevation: 3,
-  },
-  image: {
-    width: '100%',
-    height: '100%',
-    resizeMode: 'cover',
-    borderRadius: 15,
+  wrapper: {
+    marginTop: 25,
   },
 
-  descriptionInput: {
-    borderRadius: 15,
-    paddingHorizontal: 11,
-    padding: 2,
-    backgroundColor: '#213647',
-    marginBottom: 10,
-    borderWidth: 2,
-    borderColor: '#52636F',
-  },
+  inputContainer: {paddingVertical: 2},
 
-  titleInput: {
-    borderRadius: 15,
-    paddingHorizontal: 11,
-    padding: 2,
-    backgroundColor: '#213647',
-    marginBottom: 10,
-    borderWidth: 2,
-    borderColor: '#52636F',
-  },
-  dropDown: {
-    flex: 1,
-    borderRadius: 10,
-    paddingHorizontal: 11,
-    backgroundColor: '#213647',
-    marginBottom: 10,
-    borderWidth: 2,
-    borderColor: '#52636F',
-    marginRight: 10,
-  },
-  calendar: {
+  inputField: {
     flexDirection: 'row',
-    borderRadius: 10,
-    paddingHorizontal: 11,
-    padding: 2,
     backgroundColor: '#213647',
-    marginBottom: 10,
-    borderWidth: 2,
     borderColor: '#52636F',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    borderWidth: 2,
+    borderRadius: 15,
+    paddingHorizontal: 11,
+    marginVertical: 6,
+    marginHorizontal: 18,
+    // alignItems: 'center',
+    // justifyContent: 'space-between',
   },
 
   footerButton: {
+    alignItems: 'center',
     padding: 10,
     borderRadius: 6,
-    alignItems: 'center',
     elevation: 10,
+    marginTop: 5,
+    marginHorizontal: 18,
   },
 
   buttonText: {
@@ -307,6 +406,49 @@ const styles = StyleSheet.create({
     // fontFamily: 'Roboto-Black',
     fontWeight: 'bold',
   },
-});
 
-export default FormikPostUploader;
+  pfp: {
+    alignSelf: 'center',
+    marginBottom: 20,
+    borderRadius: 100,
+    borderWidth: 2,
+    borderColor: '#838383',
+    width: 150,
+    height: 150,
+    // elevation: 10,
+  },
+
+  pfpcancel: {
+    borderWidth: 2,
+    borderColor: 'white',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 40,
+    height: 40,
+    borderRadius: 50,
+    marginRight: 100,
+  },
+
+  logoContainer: {
+    paddingVertical: 20,
+    flexDirection: 'row',
+    alignSelf: 'center',
+  },
+
+  logo: {
+    height: 50,
+    width: 50,
+  },
+
+  icons: {
+    height: 25,
+    width: 25,
+  },
+
+  input: {
+    flex: 1,
+    color: 'white',
+    fontSize: 16,
+  },
+});
+export default EditInputs;

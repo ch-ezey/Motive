@@ -2,7 +2,7 @@ import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import React from 'react';
 import {Image} from 'react-native-elements';
 
-const EditInfo = ({userInfo}) => {
+const EditImages = ({userInfo}) => {
   console.log(userInfo.postCount);
 
   return (
@@ -11,19 +11,21 @@ const EditInfo = ({userInfo}) => {
         style={{
           backgroundColor: '#213647',
           height: 170,
-          // justifyContent: 'center',
         }}>
         <View style={{position: 'absolute', alignSelf: 'center', top: '20%'}}>
           <Image
-            style={{width: 100, height: 100, tintColor: '#374957'}}
+            style={{
+              width: 100,
+              height: 100,
+              tintColor: '#374957',
+              resizeMode: 'center',
+            }}
             source={require('../../assets/icons/landscape.png')}
           />
           <TouchableOpacity
             style={{
               position: 'absolute',
               left: 180,
-              // right: 0,
-              // bottom: 0,
               top: 108,
             }}>
             <View style={styles.uploadContainer}>
@@ -38,7 +40,6 @@ const EditInfo = ({userInfo}) => {
           style={{
             width: 120,
             height: 120,
-            // margin: 5,
             top: 80,
             borderRadius: 100,
             backgroundColor: '#082032',
@@ -60,7 +61,6 @@ const EditInfo = ({userInfo}) => {
             style={{
               position: 'absolute',
               left: 90,
-              // right: 0,
               bottom: 20,
             }}>
             <View style={styles.cameraContainer}>
@@ -72,33 +72,17 @@ const EditInfo = ({userInfo}) => {
           </TouchableOpacity>
         </View>
       </View>
-      {/* <View style={{marginTop: 30, margin: 10}}></View> */}
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
+    // flex: 1,
+    // borderWidth: 1,
     // alignItems: 'center',
-    flexDirection: 'column',
+    // flexDirection: 'column',
     borderColor: 'white',
-  },
-
-  infoContainer: {
-    flexDirection: 'row',
-    borderColor: 'white',
-    alignSelf: 'center',
-  },
-
-  info: {
-    margin: 10,
-    borderColor: 'white',
-  },
-
-  infoText: {
-    color: 'white',
-    // fontWeight: '500',
-    textAlign: 'center',
   },
 
   pfp: {
@@ -141,4 +125,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default EditInfo;
+export default EditImages;

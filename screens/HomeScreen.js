@@ -69,11 +69,6 @@ const HomeScreen = ({navigation}) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* <StatusBar
-        // hidden
-        backgroundColor={'#082032'}
-        barStyle={'light-content'}
-      /> */}
       <Header navigation={navigation} />
       <PostScreen
         navigation={navigation}

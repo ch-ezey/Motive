@@ -1,6 +1,7 @@
 import {View, StyleSheet, TouchableOpacity, Image} from 'react-native';
 import React, {useState} from 'react';
 import {useRoute} from '@react-navigation/native';
+import {auth} from '../../firebase';
 
 export const BottomTabIcons = [
   {
@@ -26,17 +27,17 @@ export const BottomTabIcons = [
     active: require('../../assets/icons/userA.png'),
     inactive: require('../../assets/icons/user.png'),
     screen: 'ProfileScreen',
-    // pfp: auth.currentUser.photoURL ? auth.currentUser.photoURL : null
+    // pfp: auth.currentUser.photoURL ? auth.currentUser.photoURL : null,
   },
 ];
 
 const BottomTabs = ({icons, navigation}) => {
-  const [activeTab, setActiveTab] = useState('Home');
+  // const [activeTab, setActiveTab] = useState('Home');
 
   const Icon = ({icon}) => (
     <TouchableOpacity
       onPress={() => {
-        setActiveTab(icon.name);
+        // setActiveTab(icon.name);
         navigation.navigate(icon.screen);
       }}>
       <Image
@@ -90,6 +91,11 @@ const styles = StyleSheet.create({
     borderWidth: activeTab == 'Profile' ? 2 : 0,
     borderColor: '#fff',
   }),
+
+  activeTabIndicator: {
+    borderBottomColor: '#238ddc', // Example active color
+    borderBottomWidth: 2,
+  },
 });
 
 export default BottomTabs;

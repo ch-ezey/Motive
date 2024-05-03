@@ -73,6 +73,9 @@ const SignupForm = ({}) => {
         owner_uid: userCredential.user.uid,
         username: username,
         email: userCredential.user.email,
+        name: '',
+        bio: '',
+        number: '',
         profile_picture:
           'https://firebasestorage.googleapis.com/v0/b/motive-8c0ca.appspot.com/o/assets%2FuserA.png?alt=media&token=45b8abe6-13ac-4635-b44a-2faddf35a3c3',
       };
@@ -205,7 +208,7 @@ const SignupForm = ({}) => {
                 textContentType="username"
                 onChangeText={handleChange('username')}
                 onBlur={handleBlur('username')}
-                value={values.username}
+                value={values.username.trim()}
               />
 
               {isUsernameValid ? (
@@ -241,7 +244,7 @@ const SignupForm = ({}) => {
                 textContentType="password"
                 onChangeText={handleChange('password')}
                 onBlur={handleBlur('passowrd')}
-                value={values.password}
+                value={values.password.trim()}
               />
               <TouchableOpacity onPress={toggleShowPassword}>
                 {showPassword ? (
@@ -392,6 +395,7 @@ const styles = StyleSheet.create({
   },
 
   input: {
+    flex: 1,
     color: 'white',
     fontSize: 16,
   },

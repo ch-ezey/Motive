@@ -7,7 +7,6 @@ import {
   ActivityIndicator,
   SafeAreaView,
   TouchableOpacity,
-  Pressable,
 } from 'react-native';
 import {BottomTabIcons} from '../components/universal/BottomTabs';
 import BottomTabs from '../components/universal/BottomTabs';
@@ -78,6 +77,51 @@ const ProfileScreen = ({navigation}) => {
 
   const [viewMode, setViewMode] = useState('grid'); // Initial view mode
 
+  const IconToggle = () => (
+    <View
+      style={{
+        flexDirection: 'column',
+        alignItems: 'center',
+        marginVertical: 5,
+        marginTop: 10,
+      }}>
+      <View style={styles.iconContainer}>
+        <TouchableOpacity onPress={() => setViewMode('grid')}>
+          <Image
+            source={require('../assets/icons/grid.png')}
+            style={[
+              styles.icons,
+              {tintColor: viewMode === 'grid' ? 'white' : '#888'},
+            ]}
+          />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => setViewMode('list')}>
+          <Image
+            source={require('../assets/icons/list-check.png')}
+            style={[
+              styles.icons,
+              {tintColor: viewMode === 'list' ? 'white' : '#888'},
+            ]}
+          />
+        </TouchableOpacity>
+      </View>
+      <View style={styles.line} />
+    </View>
+  );
+
+  const EditButton = () => (
+    <TouchableOpacity
+      navigation={navigation}
+      style={styles.editButton}
+      onPress={() => {
+        navigation.navigate('EditProfileScreen', {
+          info: userInfo,
+        });
+      }}>
+      <Text style={styles.buttonText}>EDIT PROFILE</Text>
+    </TouchableOpacity>
+  );
+
   return (
     <SafeAreaView style={styles.container}>
       {loading ? (
@@ -89,46 +133,8 @@ const ProfileScreen = ({navigation}) => {
       ) : (
         <>
           <ProfInfo userInfo={userInfo} />
-          <TouchableOpacity
-            navigation={navigation}
-            style={styles.editButton}
-            onPress={() => {
-              navigation.navigate('EditProfileScreen', {
-                info: userInfo,
-              });
-            }}>
-            <Text style={styles.buttonText}>EDIT PROFILE</Text>
-          </TouchableOpacity>
-          <View
-            style={{
-              flexDirection: 'column',
-              // alignSelf: 'center',
-              alignItems: 'center',
-              marginVertical: 5,
-            }}>
-            <View style={styles.iconContainer}>
-              <TouchableOpacity onPress={() => setViewMode('grid')}>
-                <Image
-                  source={require('../assets/icons/grid.png')}
-                  style={[
-                    styles.icons,
-                    {tintColor: viewMode === 'grid' ? 'white' : '#888'},
-                  ]}
-                />
-              </TouchableOpacity>
-              <TouchableOpacity onPress={() => setViewMode('list')}>
-                <Image
-                  source={require('../assets/icons/list-check.png')}
-                  style={[
-                    styles.icons,
-                    {tintColor: viewMode === 'list' ? 'white' : '#888'},
-                  ]}
-                />
-              </TouchableOpacity>
-            </View>
-            <View style={styles.line} />
-          </View>
-          {/* <View style={{alignSelf: 'center'}}> */}
+          <EditButton />
+          <IconToggle />
           <FlatList
             contentContainerStyle={styles.postContainer}
             key={numColumns}
@@ -142,7 +148,6 @@ const ProfileScreen = ({navigation}) => {
               )
             }
           />
-          {/* </View> */}
           <ProfHeader navigation={navigation} userInfo={userInfo} />
         </>
       )}
@@ -160,10 +165,6 @@ const styles = StyleSheet.create({
   postContainer: {
     width: 369,
     alignSelf: 'center',
-    // flex: 1,
-    // padding: 10,
-    // alignSelf: 'center',
-    // paddingHorizontal: 7.3,
   },
 
   loadingContainer: {
@@ -202,7 +203,7 @@ const styles = StyleSheet.create({
     width: 250,
     borderRadius: 6,
     elevation: 10,
-    marginBottom: 20,
+    marginVertical: 5,
     // margin: 10,
     // marginTop: 5,
   },

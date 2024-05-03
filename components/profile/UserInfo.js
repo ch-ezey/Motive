@@ -34,17 +34,14 @@ const ProfInfo = ({userInfo}) => {
       </View>
 
       <View style={{marginTop: 30, marginHorizontal: 10}}>
-        {userInfo.name == null ? null : (
+        {userInfo.bio == null || userInfo.bio == '' ? null : (
           <Text style={{color: 'white', fontWeight: 900, fontSize: 30}}>
             {userInfo.name}
           </Text>
         )}
-        {/* <Text style={{color: 'white', fontWeight: 900, fontSize: 30}}>
-          Cheta Ezenwoye
-        </Text> */}
         <Text style={{color: '#86929B'}}>@{userInfo.username}</Text>
-        {userInfo.bio == null ? null : (
-          <Text style={{color: 'white', fontWeight: 900, fontSize: 30}}>
+        {userInfo.bio == null || userInfo.bio == '' ? null : (
+          <Text style={{color: 'white', fontWeight: 400, fontSize: 15}}>
             {userInfo.bio}
           </Text>
         )}
