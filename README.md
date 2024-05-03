@@ -1,23 +1,23 @@
 # Motive - Your Ultimate Student Social Platform
 
 ## Project Overview
-Welcome to the "Motive" GitHub repository—a showcase of my ongoing project developing a dynamic React Native mobile application aimed towards the vibrant student community. "Motive" is a social platform designed to help students discover and host exciting parties, university/society events, and connect with other students to help find friends to make these experiences unforgettable. This repository is a testament to my ability to create and maintain innovative software, with a focus on React Native and RESTful API integration.
+Motive is a mobile app (built with React Native) that helps users find exciting events, connect with like-minded people, and build a community around shared experiences.
 
 ## Key Features
-"Motive" project offers a rich array of features:
 
-1. **Event Discovery:** Find the hottest parties, university events, and gatherings in your area with ease.
+1. **Intuitive Event Discovery:** Search and filter events by location, keywords, and interests
 
-2. **Event Hosting:** Host your own events and manage guest lists effortlessly.
+2. **Event Creation:** Host your own events and manage guest lists effortlessly.
 
 3. **Friend Connections:** Connect with friends and fellow students to enhance your social experience.
 
-4. **Real-time Updates:** Thanks to Firebase, all changes and updates occur in real-time, ensuring a dynamic and responsive user experience.
+4. **User Profiles:** Showcase your interests and connect with other attendees.
 
-5. **Secure Authentication:** Robust Firebase authentication ensures user data privacy and security.
+5. **Saved Events:** Bookmark events you're interested in and organize them for later.
+
+6. **Real-time Chat:** Message other users individually or participate in event-specific group chats.
 
 ## Demo
-Experience "Motive" in action by accessing our live demo:
 <p>
     <img src="./assets/screenshots/Demo1.gif" width="200">
     <img src="./assets/screenshots/Demo2.gif" width="200">
