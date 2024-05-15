@@ -20,7 +20,7 @@ Motive is a mobile app (built with React Native) that helps users find exciting 
 ## Demo
 <p>
     <img src="./assets/screenshots/Posting.gif" width="200">
-    <img src="./assets/screenshots/Like+Comment.gif" width="200">
+    <img src="./assets/screenshots/Like-Comment.gif" width="200">
     <img src="./assets/screenshots/EditProfile.gif" width="200">
     <img src="./assets/screenshots/Log-In.gif" width="200">
 </p>
