@@ -16,7 +16,6 @@ import {GestureHandlerRootView} from 'react-native-gesture-handler';
 
 const screenOptions = {
   headerShown: false,
-  backBehaviour: 'history',
 };
 
 const PostStack = createStackNavigator();
@@ -79,7 +78,7 @@ export const SignedInStack = () => (
   <GestureHandlerRootView style={{flex: 1}}>
     <NavigationContainer>
       <TabStack.Navigator
-        backBehavior="order"
+        backBehavior="history"
         tabBar={() => null}
         screenOptions={screenOptions}>
         <TabStack.Screen name="HomeScreen" component={HomeScreen} />
