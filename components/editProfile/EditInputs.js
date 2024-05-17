@@ -1,24 +1,15 @@
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  Alert,
-  Image,
-  Pressable,
-  ScrollView,
-} from 'react-native';
+import {View, Text, StyleSheet, TouchableOpacity, Alert} from 'react-native';
 import React, {useState} from 'react';
 import {TextInput} from 'react-native-gesture-handler';
 
 import {Formik} from 'formik';
 import * as Yup from 'yup';
 import {validate} from 'email-validator';
-import {auth, db, storage} from '../../firebase';
-import {doc, setDoc, updateDoc} from 'firebase/firestore';
-import {createUserWithEmailAndPassword, updateProfile} from 'firebase/auth';
+import {auth, db} from '../../firebase';
+import {doc, updateDoc} from 'firebase/firestore';
+import {updateProfile} from 'firebase/auth';
 
-const EditInputs = ({navigation, userInfo}) => {
+const EditInputs = ({userInfo, onInputChange}) => {
   const phoneRegExp =
     /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
 
@@ -78,24 +69,26 @@ const EditInputs = ({navigation, userInfo}) => {
   };
 
   return (
-    <ScrollView style={styles.wrapper}>
+    <View style={styles.wrapper}>
       <Formik
-        initialValues={{
-          name: userInfo.name,
-          username: userInfo.username,
-          bio: userInfo.bio,
-          email: userInfo.email,
-          number: userInfo.number,
-        }}
-        onSubmit={async values => {
-          await onUpdate(
-            values.name,
-            values.username,
-            values.bio,
-            values.email,
-            values.number,
-          ).then(navigation.goBack());
-        }}
+        initialValues={userInfo} // Use spread syntax for cleaner initialization
+        // onSubmit={async values => {
+        //   setIsSubmitting(true); // Disable button during submission
+        //   try {
+        //     await onUpdate(
+        //       values.name,
+        //       values.username,
+        //       values.bio,
+        //       values.email,
+        //       values.number,
+        //     );
+        //     navigation.navigate('ProfileScreen');
+        //   } catch (error) {
+        //     Alert.alert('Error', error.message); // More descriptive error message
+        //   } finally {
+        //     setIsSubmitting(false); // Re-enable button after submission
+        //   }
+        // }}
         validationSchema={SignupFormSchema}
         validateOnMount={false}>
         {({handleChange, handleBlur, handleSubmit, values, isValid}) => (
@@ -122,14 +115,17 @@ const EditInputs = ({navigation, userInfo}) => {
                   ]}>
                   <TextInput
                     style={styles.input}
-                    placeholderTextColor="#ACAFB0"
+                    onChangeText={text => {
+                      handleChange('name')(text); // Update Formik state
+                      onInputChange('name', text); // Update parent state
+                    }}
+                    onBlur={handleBlur('name')}
+                    value={values.name}
                     placeholder="Name"
+                    placeholderTextColor="#ACAFB0"
                     autoCapitalize="none"
                     autoCorrect={false}
                     textContentType="name"
-                    onChangeText={handleChange('name')}
-                    onBlur={handleBlur('name')}
-                    value={values.name}
                   />
                 </View>
 
@@ -178,14 +174,17 @@ const EditInputs = ({navigation, userInfo}) => {
                   ]}>
                   <TextInput
                     style={styles.input}
-                    placeholderTextColor="#ACAFB0"
+                    onChangeText={text => {
+                      handleChange('username')(text);
+                      onInputChange('username', text);
+                    }}
+                    onBlur={handleBlur('username')}
+                    value={values.username.trim()}
                     placeholder="Username"
+                    placeholderTextColor="#ACAFB0"
                     autoCapitalize="none"
                     autoCorrect={false}
                     textContentType="username"
-                    onChangeText={handleChange('username')}
-                    onBlur={handleBlur('username')}
-                    value={values.username.trim()}
                   />
                 </View>
                 <Text
@@ -226,7 +225,10 @@ const EditInputs = ({navigation, userInfo}) => {
                     autoCapitalize="none"
                     autoCorrect={true}
                     textContentType="none"
-                    onChangeText={handleChange('bio')}
+                    onChangeText={text => {
+                      handleChange('bio')(text);
+                      onInputChange('bio', text);
+                    }}
                     onBlur={handleBlur('bio')}
                     value={values.bio}
                     multiline={true}
@@ -282,7 +284,10 @@ const EditInputs = ({navigation, userInfo}) => {
                     keyboardType="email-address"
                     textContentType="emailAddress"
                     autoFocus={false}
-                    onChangeText={handleChange('email')}
+                    onChangeText={text => {
+                      handleChange('email')(text);
+                      onInputChange('email', text);
+                    }}
                     onBlur={handleBlur('email')}
                     value={values.email}
                   />
@@ -314,7 +319,7 @@ const EditInputs = ({navigation, userInfo}) => {
                     styles.inputField,
                     {
                       borderColor:
-                        values.number.length < 1 || validate(values.number)
+                        values.number.length < 1 || values.number.length >= 10
                           ? '#52636F'
                           : '#fa4437',
                     },
@@ -327,14 +332,16 @@ const EditInputs = ({navigation, userInfo}) => {
                     autoCorrect={false}
                     keyboardType="phone-pad"
                     textContentType="telephoneNumber"
-                    onChangeText={handleChange('number')}
+                    onChangeText={text => {
+                      handleChange('number')(text);
+                      onInputChange('number', text);
+                    }}
                     onBlur={handleBlur('number')}
                     value={values.number}
                   />
                   <TouchableOpacity
                     style={{
                       alignSelf: 'center',
-                      // justifyContent: 'center',
                       backgroundColor: '#5034FF',
                       paddingHorizontal: 15,
                       paddingVertical: 7,
@@ -345,30 +352,10 @@ const EditInputs = ({navigation, userInfo}) => {
                 </View>
               </View>
             </View>
-            <Pressable
-              style={({pressed}) => [
-                styles.footerButton,
-                {
-                  backgroundColor: isValid ? '#238ddc' : '#cccccc',
-                  opacity: pressed ? 0.5 : 1,
-                },
-              ]}
-              onPress={handleSubmit}
-              disabled={!isValid}>
-              <Text
-                style={[
-                  styles.buttonText,
-                  {
-                    color: isValid ? 'white' : '#838383',
-                  },
-                ]}>
-                SAVE
-              </Text>
-            </Pressable>
           </>
         )}
       </Formik>
-    </ScrollView>
+    </View>
   );
 };
 

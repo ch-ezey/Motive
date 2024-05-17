@@ -67,6 +67,55 @@ const UserScreen = ({route, navigation}) => {
 
   const [viewMode, setViewMode] = useState('grid'); // Initial view mode
 
+  const IconToggle = () => (
+    <View
+      style={{
+        flexDirection: 'column',
+        alignItems: 'center',
+        marginVertical: 5,
+        marginTop: 10,
+      }}>
+      <View style={styles.iconContainer}>
+        <TouchableOpacity onPress={() => setViewMode('grid')}>
+          <Image
+            source={require('../assets/icons/grid.png')}
+            style={[
+              styles.icons,
+              {tintColor: viewMode === 'grid' ? 'white' : '#888'},
+            ]}
+          />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => setViewMode('list')}>
+          <Image
+            source={require('../assets/icons/list-check.png')}
+            style={[
+              styles.icons,
+              {tintColor: viewMode === 'list' ? 'white' : '#888'},
+            ]}
+          />
+        </TouchableOpacity>
+      </View>
+      <View style={styles.line} />
+    </View>
+  );
+
+  const Buttons = () => (
+    <View
+      style={{
+        flexDirection: 'row',
+        width: '80%',
+        alignSelf: 'center',
+        marginVertical: 5,
+      }}>
+      <TouchableOpacity navigation={navigation} style={styles.followButton}>
+        <Text style={styles.buttonText}>FOLLOW</Text>
+      </TouchableOpacity>
+      <TouchableOpacity navigation={navigation} style={styles.messageButton}>
+        <Text style={styles.buttonText}>MESSAGE</Text>
+      </TouchableOpacity>
+    </View>
+  );
+
   return (
     <SafeAreaView style={styles.container}>
       {loading ? (
@@ -78,19 +127,7 @@ const UserScreen = ({route, navigation}) => {
       ) : (
         <>
           <UserInfo userInfo={userInfo} />
-          <View
-            style={{flexDirection: 'row', width: '80%', alignSelf: 'center'}}>
-            <TouchableOpacity
-              navigation={navigation}
-              style={styles.followButton}>
-              <Text style={styles.buttonText}>FOLLOW</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              navigation={navigation}
-              style={styles.messageButton}>
-              <Text style={styles.buttonText}>MESSAGE</Text>
-            </TouchableOpacity>
-          </View>
+          <Buttons />
           <View
             style={{
               flexDirection: 'column',
@@ -98,36 +135,13 @@ const UserScreen = ({route, navigation}) => {
               alignItems: 'center',
               marginVertical: 5,
             }}>
-            <View style={styles.iconContainer}>
-              <TouchableOpacity onPress={() => setViewMode('grid')}>
-                <Image
-                  source={require('../assets/icons/grid.png')}
-                  style={[
-                    styles.icons,
-                    {tintColor: viewMode === 'grid' ? 'white' : '#888'},
-                  ]}
-                />
-              </TouchableOpacity>
-              <TouchableOpacity onPress={() => setViewMode('list')}>
-                <Image
-                  source={require('../assets/icons/list-check.png')}
-                  style={[
-                    styles.icons,
-                    {tintColor: viewMode === 'list' ? 'white' : '#888'},
-                  ]}
-                />
-              </TouchableOpacity>
-            </View>
-            <View style={styles.line} />
+            <IconToggle />
           </View>
-          <FlatList
-            contentContainerStyle={styles.postContainer}
-            // style={styles.postContainer}
-            key={numColumns}
-            numColumns={numColumns}
-            data={posts}
-            renderItem={({item}) => <UserPosts post={item} />}
-          />
+          <View style={styles.postContainer}>
+            {posts.map((post, index) => (
+              <UserPosts key={index} post={post} />
+            ))}
+          </View>
           <UserHeader navigation={navigation} userInfo={userInfo} />
         </>
       )}
@@ -143,11 +157,9 @@ const styles = StyleSheet.create({
 
   postContainer: {
     width: 369,
+    flexDirection: 'row',
     alignSelf: 'center',
-    // flex: 1,
-    // padding: 10,
-    // alignSelf: 'center',
-    // paddingHorizontal: 7.3,
+    flexWrap: 'wrap',
   },
 
   loadingContainer: {
@@ -185,7 +197,7 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 6,
     elevation: 10,
-    marginBottom: 20,
+    // marginBottom: 20,
     flex: 1.5,
     marginHorizontal: 10,
   },
@@ -197,7 +209,7 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 6,
     elevation: 10,
-    marginBottom: 20,
+    // marginBottom: 20,
     flex: 1,
     marginHorizontal: 10,
   },

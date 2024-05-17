@@ -29,7 +29,7 @@ const CommentSheet = ({
     <Text style={styles.headerText}>Loading comments...</Text>
   );
 
-  const snapPoints = useMemo(() => ['25%', '50%', '75%'], []);
+  const snapPoints = useMemo(() => ['25%', '50%', '75%']);
 
   const renderBackdrop = useCallback(
     props => (

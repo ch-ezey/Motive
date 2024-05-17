@@ -45,13 +45,13 @@ const ProfInfo = ({userInfo}) => {
       )}
       <Text style={{color: '#86929B'}}>@{userInfo.username}</Text>
 
-      <View style={{paddingTop: 5}}>
-        {userInfo.bio == null || userInfo.bio == '' ? null : (
+      {userInfo.bio == null || userInfo.bio == '' ? null : (
+        <View style={{paddingTop: 5}}>
           <Text style={{color: 'white', fontWeight: 400, fontSize: 15}}>
             {userInfo.bio}
           </Text>
-        )}
-      </View>
+        </View>
+      )}
     </View>
   );
 

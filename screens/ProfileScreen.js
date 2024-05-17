@@ -25,7 +25,7 @@ import {
 import {auth, db} from '../firebase';
 import ProfPosts from '../components/profile/ProfPosts';
 import ProfInfo from '../components/profile/ProfInfo';
-import {FlatList} from 'react-native-gesture-handler';
+import {FlatList, ScrollView} from 'react-native-gesture-handler';
 
 const ProfileScreen = ({navigation}) => {
   const [userInfo, setUserInfo] = useState(null);
@@ -132,10 +132,36 @@ const ProfileScreen = ({navigation}) => {
         </View>
       ) : (
         <>
-          <ProfInfo userInfo={userInfo} />
-          <EditButton />
-          <IconToggle />
-          <FlatList
+          <ScrollView>
+            <ProfInfo userInfo={userInfo} />
+            <EditButton />
+            <IconToggle />
+
+            <View style={styles.postContainer}>
+              {posts.map((post, index) =>
+                viewMode === 'grid' ? (
+                  <ProfPosts key={index} post={post} />
+                ) : (
+                  <ProfPostsList key={index} post={post} />
+                ),
+              )}
+            </View>
+
+            {/* {viewMode === 'grid' ? (
+              <View style={styles.postContainer}>
+                {posts.map((post, index) => (
+                  <ProfPosts key={index} post={post} />
+                ))}
+              </View>
+            ) : (
+              <View style={styles.postContainer}>
+                {posts.map((post, index) => (
+                  <ProfPostsList key={index} post={post} />
+                ))}
+              </View>
+            )} */}
+
+            {/* <FlatList
             contentContainerStyle={styles.postContainer}
             key={numColumns}
             numColumns={numColumns}
@@ -147,8 +173,9 @@ const ProfileScreen = ({navigation}) => {
                 <ProfPostsList post={item} /> // List View
               )
             }
-          />
-          <ProfHeader navigation={navigation} userInfo={userInfo} />
+          /> */}
+            <ProfHeader navigation={navigation} userInfo={userInfo} />
+          </ScrollView>
         </>
       )}
       <BottomTabs navigation={navigation} icons={BottomTabIcons} />
@@ -164,7 +191,9 @@ const styles = StyleSheet.create({
 
   postContainer: {
     width: 369,
+    flexDirection: 'row',
     alignSelf: 'center',
+    flexWrap: 'wrap',
   },
 
   loadingContainer: {
@@ -204,14 +233,11 @@ const styles = StyleSheet.create({
     borderRadius: 6,
     elevation: 10,
     marginVertical: 5,
-    // margin: 10,
-    // marginTop: 5,
   },
 
   buttonText: {
     fontSize: 14,
     color: 'white',
-    // fontFamily: 'Roboto-Black',
     fontWeight: 'bold',
   },
 });
