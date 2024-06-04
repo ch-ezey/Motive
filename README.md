@@ -1,4 +1,4 @@
-# Motive - Your Ultimate Student Social Platform
+# Motive - Your Ultimate Social Event Platform
 
 ## Project Overview
 Motive is a mobile app (built with React Native) that helps users find exciting events, connect with like-minded people, and build a community around shared experiences.
