@@ -6,8 +6,9 @@ import {
   Image,
   TouchableOpacity,
   Pressable,
+  ActivityIndicator,
 } from 'react-native';
-import React from 'react';
+import React, {useState} from 'react';
 import {TextInput} from 'react-native-gesture-handler';
 import {useImagePicker} from '../universal/useImagePicker';
 import {Formik} from 'formik';
@@ -36,12 +37,12 @@ const FormikPostUploader = ({navigation}) => {
   const user = auth.currentUser;
 
   const {selectedImage, pickImage} = useImagePicker();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const uploadImage = async user_uid => {
     const uri = selectedImage;
     const filename = uri.substring(uri.lastIndexOf('/') + 1);
 
-    console.log('image: ' + selectedImage);
     console.log('uri: ' + uri);
     console.log('filename: ' + filename);
     console.log(user.uid);
@@ -70,8 +71,8 @@ const FormikPostUploader = ({navigation}) => {
       const postInput = {
         file_name: selectedImage.substring(selectedImage.lastIndexOf('/') + 1),
         owner_uid: auth.currentUser.uid,
-        description: description,
-        title: title,
+        description: description.trim(),
+        title: title.trim(),
         created_at: serverTimestamp(),
         users_going: [],
         owner_doc: ownerDocRef,
@@ -101,9 +102,15 @@ const FormikPostUploader = ({navigation}) => {
     <Formik
       initialValues={{title: '', description: ''}}
       onSubmit={async values => {
-        await onUpload(values.title, values.description).then(
-          navigation.goBack(),
-        );
+        setIsSubmitting(true); // Disable button when submitting starts
+        try {
+          await onUpload(values.title, values.description);
+          navigation.goBack();
+        } catch (error) {
+          Alert.alert('Error', error.message);
+        } finally {
+          setIsSubmitting(false); // Re-enable after submission completes (success or failure)
+        }
       }}
       validationSchema={uploadPostSchema}
       validateOnMount={true}>
@@ -223,21 +230,25 @@ const FormikPostUploader = ({navigation}) => {
               style={({pressed}) => [
                 styles.footerButton,
                 {
-                  backgroundColor: isValid ? '#238ddc' : '#cccccc',
+                  backgroundColor:
+                    isValid && !isSubmitting ? '#238ddc' : '#cccccc',
                   opacity: pressed ? 0.5 : 1,
                 },
               ]}
               onPress={handleSubmit}
-              disabled={!isValid}>
-              <Text
-                style={[
-                  styles.buttonText,
-                  {
-                    color: isValid ? 'white' : '#838383',
-                  },
-                ]}>
-                POST
-              </Text>
+              disabled={!isValid || isSubmitting} // Disable if not valid or submitting
+            >
+              {isSubmitting ? (
+                <ActivityIndicator color="white" />
+              ) : (
+                <Text
+                  style={[
+                    styles.buttonText,
+                    {color: isValid ? 'white' : '#838383'},
+                  ]}>
+                  POST
+                </Text>
+              )}
             </Pressable>
           </View>
         </>

@@ -45,9 +45,9 @@ const BottomTabs = ({icons, navigation}) => {
         style={[
           styles.icon,
           icon.name == 'Profile' ? styles.profilePic() : null,
-          // activeTab == 'Profile' && icon.name == activeTab
-          //   ? styles.profilePic(activeTab)
-          //   : null,
+          // activeTab == 'Profile' && icon.name == activeTab,
+          // ? styles.profilePic(activeTab)
+          // : null,
         ]}
       />
     </TouchableOpacity>

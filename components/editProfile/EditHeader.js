@@ -9,7 +9,7 @@ const EditHeader = ({navigation, userInfo}) => {
       <View style={styles.container}>
         <TouchableOpacity
           onPress={() => {
-            navigation.navigate('ProfileScreen');
+            navigation.goBack();
           }}>
           <View style={styles.iconContainer}>
             <Image

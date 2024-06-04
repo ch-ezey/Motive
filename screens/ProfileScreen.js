@@ -135,45 +135,35 @@ const ProfileScreen = ({navigation}) => {
           <ScrollView>
             <ProfInfo userInfo={userInfo} />
             <EditButton />
-            <IconToggle />
-
-            <View style={styles.postContainer}>
-              {posts.map((post, index) =>
-                viewMode === 'grid' ? (
-                  <ProfPosts key={index} post={post} />
-                ) : (
-                  <ProfPostsList key={index} post={post} />
-                ),
-              )}
-            </View>
-
-            {/* {viewMode === 'grid' ? (
-              <View style={styles.postContainer}>
-                {posts.map((post, index) => (
-                  <ProfPosts key={index} post={post} />
-                ))}
+            {userInfo.postCount ? (
+              <View>
+                <IconToggle />
+                <View style={styles.postContainer}>
+                  {posts.map((post, index) =>
+                    viewMode === 'grid' ? (
+                      <ProfPosts key={index} post={post} />
+                    ) : (
+                      <ProfPostsList key={index} post={post} />
+                    ),
+                  )}
+                </View>
               </View>
             ) : (
-              <View style={styles.postContainer}>
-                {posts.map((post, index) => (
-                  <ProfPostsList key={index} post={post} />
-                ))}
+              <View
+                style={{
+                  // alignSelf: 'center',
+                  alignItems: 'center',
+                  padding: 115,
+                  margin: 15,
+                  // width: 369,
+                  flex: 1,
+                  backgroundColor: '#374957',
+                  borderRadius: 10,
+                }}>
+                <Text style={{color: 'white'}}>No Posts</Text>
               </View>
-            )} */}
+            )}
 
-            {/* <FlatList
-            contentContainerStyle={styles.postContainer}
-            key={numColumns}
-            numColumns={numColumns}
-            data={posts}
-            renderItem={({item}) =>
-              viewMode === 'grid' ? (
-                <ProfPosts post={item} /> // Grid View
-              ) : (
-                <ProfPostsList post={item} /> // List View
-              )
-            }
-          /> */}
             <ProfHeader navigation={navigation} userInfo={userInfo} />
           </ScrollView>
         </>

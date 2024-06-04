@@ -113,7 +113,7 @@ const LoginForm = ({navigation}) => {
                 textContentType="password"
                 onChangeText={handleChange('password')}
                 onBlur={handleBlur('passowrd')}
-                value={values.password}
+                value={values.password.trim()}
               />
 
               <TouchableOpacity onPress={toggleShowPassword}>
@@ -236,7 +236,6 @@ const styles = StyleSheet.create({
 
   buttonText: {
     fontSize: 14,
-    // fontFamily: 'Roboto-Black',
     fontWeight: 'bold',
   },
 

@@ -1,97 +1,93 @@
-import {View, Text, StyleSheet, TouchableOpacity, Alert} from 'react-native';
-import React, {useState} from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Alert,
+  Pressable,
+  ActivityIndicator,
+} from 'react-native';
+import React, {useEffect, useRef, useState} from 'react';
 import {TextInput} from 'react-native-gesture-handler';
 
-import {Formik} from 'formik';
+import {ErrorMessage, Formik} from 'formik';
 import * as Yup from 'yup';
 import {validate} from 'email-validator';
 import {auth, db} from '../../firebase';
 import {doc, updateDoc} from 'firebase/firestore';
 import {updateProfile} from 'firebase/auth';
+import {Image} from 'react-native-elements';
 
-const EditInputs = ({userInfo, onInputChange}) => {
+const EditInputs = ({userInfo, onInputChange, onValidationChange}) => {
   const phoneRegExp =
-    /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
+    /^(?:(?:\(?(?:0(?:0|11)\)?[\s-]?\(?|\+)44\)?[\s-]?(?:\(?0\)?[\s-]?)?)|(?:\(?0))(?:(?:\d{5}\)?[\s-]?\d{4,5})|(?:\d{4}\)?[\s-]?(?:\d{5}|\d{3}[\s-]?\d{3}))|(?:\d{3}\)?[\s-]?\d{3}[\s-]?\d{3,4})|(?:\d{2}\)?[\s-]?\d{4}[\s-]?\d{4}))(?:[\s-]?(?:x|ext\.?|\#)\d{3,4})?$/;
 
   const SignupFormSchema = Yup.object().shape({
     name: Yup.string()
-      .min(1, 'A username is required')
-      .max(20, 'Username has reached character limit'),
+      // .min(1, 'Name must be at least 1 characters')
+      .max(20, 'Name has reached character limit'),
     username: Yup.string()
-      .min(5, 'A username is required')
+      .min(5, 'Username must be at least 5 characters')
       .max(20, 'Username has reached character limit')
-      .required(),
+      .matches(
+        /^[A-Za-z0-9_]+$/,
+        'Username can only contain letters, numbers, and underscores',
+      ) // New regex
+      .required('A username is required'),
     bio: Yup.string().max(200, 'Username has reached character limit'),
     email: Yup.string().email().required('An email is required'),
     number: Yup.string()
       //   .required('required')
       .matches(phoneRegExp, 'Phone number is not valid')
       .min(10, 'too short')
-      .max(10, 'too long'),
+      .max(11, 'too long'),
     //   .nullable(),
   });
 
-  const onUpdate = async (name, username, bio, email, number) => {
-    try {
-      const userInput = {
-        name: name,
-        username: username,
-        email: email,
-        bio: bio,
-        number: number,
-      };
-
-      await updateDoc(doc(db, 'users', auth.currentUser.uid), userInput).catch(
-        error => {
-          console.log(error.message);
-        },
-      );
-
-      updateProfile(auth.currentUser, {
-        displayName: username,
-      }).catch(error => {
-        Alert.alert('This is awkward...', error.message);
-      });
-
-      console.log(userInput);
-
-      console.log('Data Submitted');
-    } catch (error) {
-      Alert.alert('This is awkward...', error.message);
-    }
-  };
-
   const [isUsernameValid, setIsUsernameValid] = useState(false);
+
+  const formikRef = useRef();
 
   const toggleIsUsername = () => {
     setIsUsernameValid(!isUsernameValid);
     console.log(isUsernameValid);
   };
 
+  // New validation function for username
+  function validateUsername(username) {
+    return (
+      username.length >= 5 &&
+      username.length <= 20 &&
+      /^[A-Za-z0-9_]+$/.test(username)
+    );
+  }
+
+  // useEffect(() => {
+  //   // if (formikRef.current) {
+  //   console.log(formikRef.current.isValid);
+  //   onValidationChange(formikRef.current.isValid);
+  //   // }
+  // }, [formikRef.current.isValid]); // Only call when isValid changes
+
   return (
     <View style={styles.wrapper}>
       <Formik
+        innerRef={formikRef}
         initialValues={userInfo} // Use spread syntax for cleaner initialization
-        // onSubmit={async values => {
-        //   setIsSubmitting(true); // Disable button during submission
-        //   try {
-        //     await onUpdate(
-        //       values.name,
-        //       values.username,
-        //       values.bio,
-        //       values.email,
-        //       values.number,
-        //     );
-        //     navigation.navigate('ProfileScreen');
-        //   } catch (error) {
-        //     Alert.alert('Error', error.message); // More descriptive error message
-        //   } finally {
-        //     setIsSubmitting(false); // Re-enable button after submission
-        //   }
-        // }}
         validationSchema={SignupFormSchema}
-        validateOnMount={false}>
-        {({handleChange, handleBlur, handleSubmit, values, isValid}) => (
+        validateOnChange={true}
+        validateOnMount={true}
+        onSubmit={values => {
+          onInputChange(values, isValid); // Pass the whole 'values' object along with isValid
+        }}>
+        {({
+          handleChange,
+          handleBlur,
+          handleSubmit,
+          values,
+          isValid,
+          validateForm,
+        }) => (
           <>
             <View>
               <View style={styles.inputContainer}>
@@ -106,18 +102,17 @@ const EditInputs = ({userInfo, onInputChange}) => {
                 <View
                   style={[
                     styles.inputField,
-                    {
-                      borderColor:
-                        1 > values.name.length || values.name.length >= 5
-                          ? '#52636F'
-                          : '#fa4437',
-                    },
+                    // {
+                    //   borderColor:
+                    //     1 < values.name.length ? '#52636F' : '#fa4437',
+                    // },
                   ]}>
                   <TextInput
                     style={styles.input}
                     onChangeText={text => {
+                      console.log(isValid);
                       handleChange('name')(text); // Update Formik state
-                      onInputChange('name', text); // Update parent state
+                      onInputChange('name', text); // Pass isValid here
                     }}
                     onBlur={handleBlur('name')}
                     value={values.name}
@@ -165,21 +160,20 @@ const EditInputs = ({userInfo, onInputChange}) => {
                   style={[
                     styles.inputField,
                     {
-                      borderColor:
-                        1 > values.username.length ||
-                        values.username.length >= 5
-                          ? '#52636F'
-                          : '#fa4437',
+                      borderColor: validateUsername(values.username)
+                        ? '#52636F'
+                        : '#fa4437',
                     },
                   ]}>
                   <TextInput
                     style={styles.input}
                     onChangeText={text => {
+                      // console.log(isValid);
                       handleChange('username')(text);
-                      onInputChange('username', text);
+                      onInputChange('username', text); // Pass isValid here
                     }}
                     onBlur={handleBlur('username')}
-                    value={values.username.trim()}
+                    value={values.username}
                     placeholder="Username"
                     placeholderTextColor="#ACAFB0"
                     autoCapitalize="none"
@@ -227,7 +221,7 @@ const EditInputs = ({userInfo, onInputChange}) => {
                     textContentType="none"
                     onChangeText={text => {
                       handleChange('bio')(text);
-                      onInputChange('bio', text);
+                      onInputChange('bio', text); // Pass isValid here
                     }}
                     onBlur={handleBlur('bio')}
                     value={values.bio}
@@ -286,7 +280,7 @@ const EditInputs = ({userInfo, onInputChange}) => {
                     autoFocus={false}
                     onChangeText={text => {
                       handleChange('email')(text);
-                      onInputChange('email', text);
+                      onInputChange('email', text); // Pass isValid here
                     }}
                     onBlur={handleBlur('email')}
                     value={values.email}
@@ -319,9 +313,12 @@ const EditInputs = ({userInfo, onInputChange}) => {
                     styles.inputField,
                     {
                       borderColor:
-                        values.number.length < 1 || values.number.length >= 10
-                          ? '#52636F'
-                          : '#fa4437',
+                        values.number === ''
+                          ? '#52636F' // Default gray border if empty
+                          : values.number.length > 11 ||
+                              !phoneRegExp.test(values.number)
+                            ? '#fa4437' // Red border for invalid input
+                            : '#52636F', // Default grey border for valid input
                     },
                   ]}>
                   <TextInput
@@ -334,7 +331,7 @@ const EditInputs = ({userInfo, onInputChange}) => {
                     textContentType="telephoneNumber"
                     onChangeText={text => {
                       handleChange('number')(text);
-                      onInputChange('number', text);
+                      onInputChange('number', text); // Pass isValid here
                     }}
                     onBlur={handleBlur('number')}
                     value={values.number}
@@ -350,8 +347,18 @@ const EditInputs = ({userInfo, onInputChange}) => {
                     <Text style={{color: 'white'}}>Verify</Text>
                   </TouchableOpacity>
                 </View>
+                <ErrorMessage
+                  name="number"
+                  component={Text}
+                  style={styles.errorText}
+                />
               </View>
             </View>
+            {
+              useEffect(() => {
+                onValidationChange(isValid);
+              }, [isValid]) // Only call when isValid changes
+            }
           </>
         )}
       </Formik>
@@ -362,6 +369,7 @@ const EditInputs = ({userInfo, onInputChange}) => {
 const styles = StyleSheet.create({
   wrapper: {
     marginTop: 25,
+    // flex: 1,
   },
 
   inputContainer: {paddingVertical: 2},
@@ -436,6 +444,30 @@ const styles = StyleSheet.create({
     flex: 1,
     color: 'white',
     fontSize: 16,
+  },
+
+  errorText: {
+    // New style for the error message
+    color: '#fa4437', // Red text
+    fontSize: 12,
+    marginLeft: 11, // Align with the input field
+    marginTop: 2, // Add some spacing
+  },
+
+  saveButton: {
+    backgroundColor: '#B93A21',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 100,
+    elevation: 10,
+    height: 57,
+    width: 57,
+  },
+  icon: {
+    tintColor: '#DADADA',
+    margin: 10,
+    width: 30,
+    height: 30,
   },
 });
 export default EditInputs;

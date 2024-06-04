@@ -6,6 +6,7 @@ import {
   Alert,
   Image,
   Pressable,
+  ActivityIndicator,
 } from 'react-native';
 import React, {useState} from 'react';
 import {TextInput} from 'react-native-gesture-handler';
@@ -21,21 +22,16 @@ import {useImagePicker} from '../universal/useImagePicker';
 
 const SignupForm = ({}) => {
   const {selectedImage, pickImage, removeImage} = useImagePicker();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const uploadImage = async owner_uid => {
     const uri = selectedImage;
     const filename = uri.substring(uri.lastIndexOf('/') + 1);
 
-    console.log('image: ' + selectedImage);
     console.log('uri: ' + uri);
     console.log('filename: ' + filename);
 
     const pfpImageRef = ref(storage, owner_uid + '/' + 'pfp');
-
-    const metadata = {
-      name: 'hello',
-      contentType: 'image/jpeg',
-    };
 
     const img = await fetch(uri);
     const bytes = await img.blob();
@@ -53,9 +49,13 @@ const SignupForm = ({}) => {
   const SignupFormSchema = Yup.object().shape({
     email: Yup.string().email().required('An email is required'),
     username: Yup.string()
-      .min(5, 'A username is required')
+      .min(5, 'Username must be at least 5 characters')
       .max(20, 'Username has reached character limit')
-      .required(),
+      .matches(
+        /^[A-Za-z0-9_]+$/,
+        'Username can only contain letters, numbers, and underscores',
+      ) // New regex
+      .required('A username is required'),
     password: Yup.string()
       .min(8, 'Your password has to have at least 8 characters')
       .max(50, 'Your password has to have at most 50 characters')
@@ -67,11 +67,11 @@ const SignupForm = ({}) => {
       const userCredential = await createUserWithEmailAndPassword(
         auth,
         email,
-        password,
+        password.trim(),
       );
       const userInput = {
         owner_uid: userCredential.user.uid,
-        username: username,
+        username: username.trim(),
         email: userCredential.user.email,
         name: '',
         bio: '',
@@ -124,8 +124,20 @@ const SignupForm = ({}) => {
     <View style={styles.wrapper}>
       <Formik
         initialValues={{auth: auth, email: '', username: '', password: ''}}
-        onSubmit={values => {
-          onSignup(auth, values.email, values.password, values.username);
+        onSubmit={async values => {
+          setIsSubmitting(true); // Disable button on submission start
+          try {
+            await onSignup(
+              auth,
+              values.email,
+              values.password,
+              values.username,
+            );
+          } catch (error) {
+            Alert.alert('Error', error.message);
+          } finally {
+            setIsSubmitting(false); // Re-enable button after submission (success or error)
+          }
         }}
         validationSchema={SignupFormSchema}
         validateOnMount={true}>
@@ -194,9 +206,13 @@ const SignupForm = ({}) => {
                 styles.inputField,
                 {
                   borderColor:
-                    1 > values.username.length || values.username.length >= 5
-                      ? '#52636F'
-                      : '#fa4437',
+                    values.username === ''
+                      ? '#52636F' // Default gray border if empty
+                      : values.username.length < 5
+                        ? '#fa4437' // Red border for length violations
+                        : !/^[A-Za-z0-9_]+$/.test(values.username)
+                          ? '#fa4437' // Red border for invalid characters
+                          : '#52636F', // Default gray border if valid
                 },
               ]}>
               <TextInput
@@ -206,7 +222,11 @@ const SignupForm = ({}) => {
                 autoCapitalize="none"
                 autoCorrect={false}
                 textContentType="username"
-                onChangeText={handleChange('username')}
+                onChangeText={text => {
+                  console.log(isValid);
+                  handleChange('username')(text);
+                }}
+                // onChangeText={handleChange('username')}
                 onBlur={handleBlur('username')}
                 value={values.username.trim()}
               />
@@ -264,12 +284,17 @@ const SignupForm = ({}) => {
               style={({pressed}) => [
                 styles.footerButton,
                 {
-                  backgroundColor: isValid ? '#238ddc' : '#cccccc',
+                  backgroundColor:
+                    isValid && !isSubmitting ? '#238ddc' : '#cccccc', // Grey out when submitting
                   opacity: pressed ? 0.5 : 1,
                 },
               ]}
-              onPress={handleSubmit}
-              disabled={!isValid}>
+              onPress={
+                // () =>
+                handleSubmit
+                // console.log(isValid)
+              }
+              disabled={!isValid || isSubmitting}>
               <Text
                 style={[
                   styles.buttonText,
@@ -277,7 +302,17 @@ const SignupForm = ({}) => {
                     color: isValid ? 'white' : '#838383',
                   },
                 ]}>
-                SIGN UP
+                {isSubmitting ? (
+                  <ActivityIndicator color="white" /> // Show spinner during submission
+                ) : (
+                  <Text
+                    style={[
+                      styles.buttonText,
+                      {color: isValid ? 'white' : '#838383'},
+                    ]}>
+                    SIGN UP
+                  </Text>
+                )}
               </Text>
             </Pressable>
           </>

@@ -49,7 +49,7 @@ const CommentSheet = ({
 
       const commentInput = {
         owner_uid: auth.currentUser.uid,
-        comment: comment,
+        comment: comment.trim(),
         created_at: serverTimestamp(),
         owner_doc: ownerDocRef,
       };

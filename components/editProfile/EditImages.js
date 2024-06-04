@@ -1,9 +1,27 @@
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
-import React from 'react';
+import React, {useEffect} from 'react';
 import {Image} from 'react-native-elements';
+import {useImagePicker} from '../universal/useImagePicker';
 
-const EditImages = ({userInfo}) => {
-  // console.log(userInfo);
+const EditImages = ({userInfo, onImageChange}) => {
+  const {selectedImage, pickImage} = useImagePicker();
+
+  useEffect(() => {
+    // This useEffect ensures that the onImageChange callback is called whenever the
+    // selectedImage changes.
+    if (selectedImage) {
+      onImageChange(selectedImage);
+    }
+  }, [selectedImage, onImageChange]); // Add onImageChange to dependency array
+
+  const handleImagePick = async () => {
+    try {
+      await pickImage();
+      // No need to manually call onImageChange here, as the useEffect handles it.
+    } catch (error) {
+      Alert.alert('Error', error.message);
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -18,6 +36,7 @@ const EditImages = ({userInfo}) => {
           source={require('../../assets/icons/landscape.png')}
         />
         <TouchableOpacity
+          // onPress={pickImage}
           style={{
             position: 'absolute',
             left: 180,
@@ -51,8 +70,13 @@ const EditImages = ({userInfo}) => {
             bottom: 30,
           }}
         />
-        <Image source={{uri: userInfo.profile_picture}} style={styles.pfp} />
+        {selectedImage ? (
+          <Image source={{uri: selectedImage}} style={styles.pfp} />
+        ) : (
+          <Image source={{uri: userInfo.profile_picture}} style={styles.pfp} />
+        )}
         <TouchableOpacity
+          onPress={handleImagePick}
           style={{
             position: 'absolute',
             left: 90,

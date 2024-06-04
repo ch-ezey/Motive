@@ -7,6 +7,7 @@ import {
   ActivityIndicator,
   TouchableOpacity,
   Image,
+  ScrollView,
 } from 'react-native';
 import UserHeader from '../components/profile/UserHeader';
 import {
@@ -20,7 +21,6 @@ import {
 import {db} from '../firebase';
 import UserPosts from '../components/profile/UserPosts';
 import UserInfo from '../components/profile/UserInfo';
-import {FlatList} from 'react-native-gesture-handler';
 
 const UserScreen = ({route, navigation}) => {
   const [userInfo, setUserInfo] = useState(route.params?.info);
@@ -126,23 +126,25 @@ const UserScreen = ({route, navigation}) => {
         </View>
       ) : (
         <>
-          <UserInfo userInfo={userInfo} />
-          <Buttons />
-          <View
-            style={{
-              flexDirection: 'column',
-              // alignSelf: 'center',
-              alignItems: 'center',
-              marginVertical: 5,
-            }}>
-            <IconToggle />
-          </View>
-          <View style={styles.postContainer}>
-            {posts.map((post, index) => (
-              <UserPosts key={index} post={post} />
-            ))}
-          </View>
-          <UserHeader navigation={navigation} userInfo={userInfo} />
+          <ScrollView>
+            <UserInfo userInfo={userInfo} />
+            <Buttons />
+            <View
+              style={{
+                flexDirection: 'column',
+                // alignSelf: 'center',
+                alignItems: 'center',
+                marginVertical: 5,
+              }}>
+              <IconToggle />
+            </View>
+            <View style={styles.postContainer}>
+              {posts.map((post, index) => (
+                <UserPosts key={index} post={post} />
+              ))}
+            </View>
+            <UserHeader navigation={navigation} userInfo={userInfo} />
+          </ScrollView>
         </>
       )}
     </SafeAreaView>
